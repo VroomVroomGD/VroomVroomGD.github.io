@@ -318,6 +318,99 @@
   }
   @media (prefers-reduced-motion: reduce) { .yt-btn.gold { animation: none; } .more { transition: none; } }
 
+
+
+  /* ---------- Video progress bars ---------- */
+  .working {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    margin: 1rem 0 1.1rem;
+    padding: 0.7rem 1.1rem;
+    background: rgba(0,0,0,0.25);
+    border: 1px solid rgba(246,237,232,0.12);
+    border-radius: 12px;
+  }
+  .working b { font-size: clamp(1.9rem, 3vw, 2.5rem); font-weight: 800; line-height: 1; color: var(--logo-red); }
+  .working span { font-size: 1.1rem; font-weight: 700; line-height: 1.15; }
+  .bars { display: grid; gap: 0.9rem; margin-bottom: 1.1rem; }
+  .bar-top { display: flex; justify-content: space-between; margin-bottom: 0.35rem; font-size: 1.05rem; font-weight: 700; }
+  .track {
+    height: 14px;
+    overflow: hidden;
+    border: 1px solid rgba(246,237,232,0.14);
+    border-radius: 999px;
+    background: rgba(0,0,0,0.35);
+  }
+  .fill {
+    height: 100%;
+    width: var(--p);
+    border-radius: 999px;
+    background: linear-gradient(90deg, #c81f2b, #ff3b4a);
+    box-shadow: 0 0 12px rgba(255,59,74,0.55);
+    animation: fill 1.2s cubic-bezier(.2,.7,.3,1) 1.5s both;
+  }
+  @keyframes fill { from { width: 0; } to { width: var(--p); } }
+
+  /* ---------- Level IDs (expanding button) ---------- */
+  .ids-toggle {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    padding: 0.75rem 1.4rem;
+    border: 2px solid rgba(246,237,232,0.4);
+    border-radius: 999px;
+    background: rgba(0,0,0,0.3);
+    color: var(--cream);
+    font-family: inherit;
+    font-size: 1.2rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: transform 0.25s cubic-bezier(.2,.8,.3,1), border-color 0.25s, box-shadow 0.25s;
+  }
+  .ids-toggle:hover, .ids-toggle:focus-visible { transform: translateY(-3px); border-color: var(--gold); box-shadow: 0 10px 24px rgba(0,0,0,0.4), 0 0 22px rgba(228,185,98,0.3); }
+  .ids-toggle:active { transform: translateY(0) scale(0.98); }
+  .ids-toggle:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+  .ids-toggle svg { width: 1.1rem; height: 1.1rem; transition: transform 0.35s ease; }
+  .ids-toggle[aria-expanded="true"] svg { transform: rotate(180deg); }
+  .ids-body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.45s ease; }
+  .ids-toggle[aria-expanded="true"] + .ids-body { grid-template-rows: 1fr; }
+  .ids-inner { overflow: hidden; }
+  .ids { list-style: none; display: grid; gap: 0.6rem; padding-top: 1rem; }
+  .ids li {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.6rem 0.9rem;
+    background: rgba(0,0,0,0.25);
+    border: 1px solid rgba(246,237,232,0.12);
+    border-radius: 12px;
+  }
+  .ids .lname { font-size: 1.1rem; font-weight: 700; line-height: 1.15; }
+  .ids code { font-family: ui-monospace, "SFMono-Regular", Consolas, monospace; font-size: 1rem; color: var(--gold); }
+  .copy {
+    padding: 0.3rem 0.8rem;
+    border: 2px solid rgba(246,237,232,0.35);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--cream);
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .copy:hover, .copy:focus-visible { background: rgba(228,185,98,0.18); border-color: var(--gold); }
+  .copy:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+  @media (max-width: 800px) { .ids li { grid-template-columns: 1fr auto; } .ids code { grid-column: 1; } .ids .copy { grid-column: 2; grid-row: 1 / span 2; } }
+  @media (prefers-reduced-motion: reduce) {
+    .fill { animation: none; }
+    .ids-body, .ids-toggle, .ids-toggle svg { transition: none; }
+  }
+
   /* ---------- Load-in animation (one sequence: line, logo, titles, panels) ---------- */
   .reveal { animation: rise 0.8s cubic-bezier(.2,.7,.3,1) var(--d, 0s) both; }
 
@@ -385,7 +478,18 @@
 
       <div class="panel reveal" style="--d:1.15s">
         <h2>Video Progress</h2>
-        <p>Script: 50% Done // When: Prob Early October</p>
+        <div class="working"><b>2</b><span>videos in progress</span></div>
+        <div class="bars">
+          <div class="bar" style="--p:50%">
+            <div class="bar-top"><span>Script</span><span>50%</span></div>
+            <div class="track" role="progressbar" aria-label="Script progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50"><div class="fill"></div></div>
+          </div>
+          <div class="bar" style="--p:0%">
+            <div class="bar-top"><span>Editing</span><span>0%</span></div>
+            <div class="track" role="progressbar" aria-label="Editing progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="fill"></div></div>
+          </div>
+        </div>
+        <p>When: Prob Early October</p>
       </div>
 
       <div class="panel reveal" style="--d:1.3s">
@@ -444,8 +548,54 @@
         </div>
         <a class="more" href="https://cilkocrate.vroomvroom.workers.dev/#/" target="_blank" rel="noopener">See all 75 levels on the Cilkocrate website</a>
       </div>
+
+      <div class="panel reveal" style="--d:1.4s">
+        <button class="ids-toggle" type="button" aria-expanded="false" aria-controls="ids-body">
+          Show Level IDs
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7.4 8.6 12 13.2l4.6-4.6L18 10l-6 6-6-6z"/></svg>
+        </button>
+        <div class="ids-body" id="ids-body">
+          <div class="ids-inner">
+            <ul class="ids">
+              <li><span class="lname">Code Red Full</span><code>132355629</code><button class="copy" type="button" data-id="132355629">Copy</button></li>
+              <li><span class="lname">Hilkomani</span><code>120094219</code><button class="copy" type="button" data-id="120094219">Copy</button></li>
+              <li><span class="lname">Hilkomani 2</span><code>132099421</code><button class="copy" type="button" data-id="132099421">Copy</button></li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
   </main>
   </div>
+
+
+  <script>
+    (function () {
+      var toggle = document.querySelector('.ids-toggle');
+      toggle.addEventListener('click', function () {
+        var open = toggle.getAttribute('aria-expanded') === 'true';
+        toggle.setAttribute('aria-expanded', open ? 'false' : 'true');
+        toggle.firstChild.textContent = open ? 'Show Level IDs' : 'Hide Level IDs';
+      });
+
+      document.querySelectorAll('.copy').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var id = btn.getAttribute('data-id');
+          function done() {
+            btn.textContent = 'Copied!';
+            setTimeout(function () { btn.textContent = 'Copy'; }, 1400);
+          }
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(id).then(done, done);
+          } else {
+            var t = document.createElement('textarea');
+            t.value = id; document.body.appendChild(t); t.select();
+            try { document.execCommand('copy'); } catch (e) {}
+            document.body.removeChild(t); done();
+          }
+        });
+      });
+    })();
+  </script>
 </body>
 </html>
