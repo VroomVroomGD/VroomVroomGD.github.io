@@ -13,13 +13,14 @@
     --red:        #b3202b;   /* left side, pulled from the logo */
     --char:       #2c2426;   /* right side, warm charcoal */
     --cream:      #f6ede8;   /* text + border */
-    --logo-red:   #ff3b4a;   /* accent */
+    --logo-red:   #ff3b4a;   /* left accent */
+    --gold:       #e4b962;   /* right accent: antique gold suits the gothic title and sits well on red + charcoal */
     --check-size: 90px;
   }
-
+ 
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { background: var(--char); }
-
+ 
   body {
     position: relative;
     min-height: 100vh;
@@ -28,7 +29,7 @@
     color: var(--cream);
     overflow-x: hidden;
   }
-
+ 
   /* ---------- Background ---------- */
   .bg {
     position: fixed;
@@ -42,8 +43,7 @@
         var(--red) 0%, var(--red) 18%, #a5202a 26%, #85212a 36%, #612228 44%,
         #4a2427 52%, #3a2426 60%, #302426 68%, var(--char) 78%, var(--char) 100%);
   }
-
-  /* extra-soft fog in the middle */
+ 
   .blend {
     position: fixed;
     top: 0; bottom: 0; left: 25%; width: 50%;
@@ -54,8 +54,7 @@
             mask-image: linear-gradient(90deg, transparent, #000 50%, transparent);
     pointer-events: none;
   }
-
-  /* darkened edges so the middle glows and the content pops */
+ 
   .vignette {
     position: fixed;
     inset: 0;
@@ -63,20 +62,21 @@
     background: radial-gradient(ellipse at center, transparent 45%, rgba(0,0,0,0.45) 100%);
     pointer-events: none;
   }
-
+ 
   /* ---------- Divider + border ---------- */
   .divider {
     position: fixed;
     top: 17px; bottom: 17px; left: 50%;
     width: 5px;
-    transform: translateX(-50%);
+    translate: -50% 0;
+    transform-origin: top;
     background: var(--cream);
-    /* dark edges on both sides, same look as the screen border */
     box-shadow: -2px 0 0 rgba(0,0,0,0.5), 2px 0 0 rgba(0,0,0,0.5);
     z-index: 11;
     pointer-events: none;
+    animation: draw 0.9s cubic-bezier(.65,0,.25,1) 0.15s both;
   }
-
+ 
   .frame {
     position: fixed;
     inset: 12px;
@@ -85,8 +85,9 @@
     box-shadow: 0 0 0 2px rgba(0,0,0,0.5), inset 0 0 0 2px rgba(0,0,0,0.35), 0 0 30px rgba(0,0,0,0.4);
     z-index: 10;
     pointer-events: none;
+    animation: fade 0.7s ease-out both;
   }
-
+ 
   /* ---------- Layout ---------- */
   .page {
     position: relative;
@@ -94,30 +95,29 @@
     grid-template-columns: 1fr 1fr;
     min-height: 100vh;
     padding: 24px;
-    animation: fadeIn 0.9s ease-out both;
   }
-  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-  @media (prefers-reduced-motion: reduce) { .page { animation: none; } }
-
+ 
   .logo {
     position: absolute;
     top: 44px;
     left: 50%;
-    transform: translateX(-50%);
+    translate: -50% 0;
     width: 200px; height: 200px;
     image-rendering: pixelated;
+    background: #000;
     border: 4px solid var(--cream);
     border-radius: 10px;
     box-shadow: 0 0 0 3px rgba(0,0,0,0.5), 0 0 34px rgba(255,59,74,0.45), 0 12px 30px rgba(0,0,0,0.5);
-    z-index: 12;
+    z-index: 12;            /* sits above the divider line */
+    animation: pop 0.8s cubic-bezier(.2,.8,.3,1) 0.55s both;
   }
-
+ 
   .side  { padding: 36px 5vw; }
   .left  { padding-right: 140px; }
   .right { padding-left: 140px; }
-
+ 
   h1 { line-height: 1.1; text-align: center; text-shadow: 0 2px 12px rgba(0,0,0,0.4); }
-  h1::after {              /* short accent bar under each title */
+  h1::after {
     content: "";
     display: block;
     width: 64px; height: 4px;
@@ -131,10 +131,10 @@
     font-family: "New Rocker", serif;
     font-weight: 400;
     font-size: clamp(2.4rem, 4vw, 3.6rem);
-    color: var(--logo-red);
+    color: var(--gold);
   }
-
-  /* frosted panels holding the content */
+  .right h1::after { background: var(--gold); box-shadow: 0 0 12px rgba(228,185,98,0.55); }
+ 
   .panel {
     margin-bottom: 1.6rem;
     padding: 1.3rem 1.6rem 1.5rem;
@@ -145,9 +145,21 @@
     -webkit-backdrop-filter: blur(6px);
     box-shadow: 0 10px 30px rgba(0,0,0,0.25);
   }
-  h2 { font-size: clamp(1.5rem, 2.4vw, 2rem); line-height: 1.1; margin-bottom: 0.7rem; }
-  p  { font-size: clamp(1.2rem, 2vw, 1.6rem); line-height: 1.25; font-weight: 500; }
-
+  h2 { font-size: clamp(1.5rem, 2.4vw, 2rem); line-height: 1.1; margin-bottom: 0.6rem; }
+  p  { font-size: clamp(1.1rem, 1.7vw, 1.35rem); line-height: 1.3; font-weight: 500; color: rgba(246,237,232,0.85); }
+ 
+  /* ---------- Load-in animation (one sequence: line, logo, titles, panels) ---------- */
+  .reveal { animation: rise 0.8s cubic-bezier(.2,.7,.3,1) var(--d, 0s) both; }
+ 
+  @keyframes draw { from { scale: 1 0; } to { scale: 1 1; } }
+  @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes pop  { from { opacity: 0; scale: 0.85; } to { opacity: 1; scale: 1; } }
+  @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+ 
+  @media (prefers-reduced-motion: reduce) {
+    .divider, .frame, .logo, .reveal { animation: none; }
+  }
+ 
   /* ---------- Mobile ---------- */
   @media (max-width: 800px) {
     .bg {
@@ -165,7 +177,7 @@
     }
     .divider { display: none; }
     .page { grid-template-columns: 1fr; }
-    .logo { position: static; transform: none; display: block; margin: 16px auto 0; width: 130px; height: 130px; }
+    .logo { position: static; translate: none; display: block; margin: 16px auto 0; width: 130px; height: 130px; }
     .side, .left, .right { padding: 24px 5vw; }
     .right { border-top: 2px solid rgba(246,237,232,0.3); margin-top: 8px; }
   }
@@ -177,31 +189,34 @@
   <div class="vignette"></div>
   <div class="divider"></div>
   <div class="frame"></div>
-
+ 
   <main class="page">
-    <img class="logo" src="Logo.png" alt="Logo">
-
+    <img class="logo" src="Logo.png" alt="VroomVroom logo">
+ 
     <div class="side left">
-      <h1>VroomVroom Stuff</h1>
-
-      <div class="panel">
-        <h2>Yt channel<br>Stats</h2>
-        <p>yo yo yo</p>
+      <h1 class="reveal" style="--d:.8s">VroomVroom</h1>
+ 
+      <div class="panel reveal" style="--d:1s">
+        <h2>Channel Statistics</h2>
+        <p>Subscriber count, total views, and channel growth will be shown here.</p>
       </div>
-
-      <div class="panel">
+ 
+      <div class="panel reveal" style="--d:1.15s">
         <h2>Video Progress</h2>
-        <p>yo yo yo</p>
+        <p>Follow what's currently in production and which videos are releasing next.</p>
       </div>
     </div>
-
+ 
     <div class="side right">
-      <h1>Cilkocrate Stuff</h1>
-
-      <div class="panel">
-        <p>yo yo yo</p>
+      <h1 class="reveal" style="--d:.9s">Cilkocrate</h1>
+ 
+      <div class="panel reveal" style="--d:1.1s">
+        <h2>Latest Updates</h2>
+        <p>Projects, announcements, and news from Cilkocrate will be posted here.</p>
       </div>
     </div>
   </main>
 </body>
 </html>
+
+ 
