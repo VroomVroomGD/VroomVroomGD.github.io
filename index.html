@@ -28,7 +28,7 @@
     font-family: "Baloo 2", system-ui, sans-serif;
     font-weight: 700;
     color: var(--cream);
-    overflow-x: hidden;
+    overflow: hidden;
   }
  
   /* ---------- Background ---------- */
@@ -66,8 +66,8 @@
  
   /* ---------- Divider + border ---------- */
   .divider {
-    position: fixed;
-    top: 17px; bottom: 17px; left: 50%;
+    position: absolute;
+    top: 0; bottom: 0; left: 50%;
     width: 9px;                                   /* 5px line + 2px dark edge each side */
     translate: -50% 0;
     transform-origin: top;
@@ -75,7 +75,7 @@
     background-clip: padding-box;
     border-left: 2px solid rgba(0,0,0,0.5);
     border-right: 2px solid rgba(0,0,0,0.5);
-    /* gap in the line so it doesn't run through the tagline */
+    /* gap in the line so it doesn't run through the tagline (both scroll together) */
     -webkit-mask-image: linear-gradient(180deg, #000 0 233px, transparent 233px 279px, #000 279px);
             mask-image: linear-gradient(180deg, #000 0 233px, transparent 233px 279px, #000 279px);
     z-index: 11;
@@ -89,23 +89,35 @@
     border: 5px solid var(--cream);
     border-radius: 14px;
     box-shadow: 0 0 0 2px rgba(0,0,0,0.5), inset 0 0 0 2px rgba(0,0,0,0.35), 0 0 30px rgba(0,0,0,0.4);
-    z-index: 10;
+    z-index: 4;
     pointer-events: none;
     animation: fade 0.7s ease-out both;
   }
  
   /* ---------- Layout ---------- */
+  /* Content scrolls INSIDE the border, so nothing ever slides underneath it */
+  .scroller {
+    position: fixed;
+    inset: 17px;
+    z-index: 5;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border-radius: 9px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(246,237,232,0.4) transparent;
+    scrollbar-gutter: stable both-edges;   /* keeps everything centered */
+  }
   .page {
     position: relative;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    min-height: 100vh;
-    padding: 24px;
+    min-height: 100%;
+    padding: 7px;
   }
  
   .logo {
     position: absolute;
-    top: 44px;
+    top: 27px;
     left: 50%;
     translate: -50% 0;
     width: 200px; height: 200px;
@@ -121,7 +133,7 @@
  
   .tagline {
     position: absolute;
-    top: 258px;
+    top: 241px;
     left: 50%;
     translate: -50% 0;
     width: max-content;
@@ -290,10 +302,11 @@
   <div class="bg"></div>
   <div class="blend"></div>
   <div class="vignette"></div>
-  <div class="divider"></div>
   <div class="frame"></div>
  
+  <div class="scroller">
   <main class="page">
+    <div class="divider"></div>
     <img class="logo" src="Logo.png" alt="VroomVroom logo">
     <p class="tagline reveal" style="--d:1.2s">i wanna be the guy</p>
  
@@ -315,23 +328,24 @@
       </div>
  
       <div class="panel reveal" style="--d:1.15s">
+        <h2>Video Progress</h2>
+        <p>Script: 50% Done // When: Prob Early October</p>
+      </div>
+ 
+      <div class="panel reveal" style="--d:1.3s">
         <h2>My Best Video</h2>
         <div class="video">
           <iframe src="https://www.youtube-nocookie.com/embed/MII1tY9DtlY" title="My Best Video" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
         </div>
       </div>
  
-      <div class="panel reveal" style="--d:1.3s">
+      <div class="panel reveal" style="--d:1.45s">
         <h2>My Most Recent Video</h2>
         <div class="video">
           <iframe src="https://www.youtube-nocookie.com/embed/SnEFyrIIUOo" title="My Most Recent Video" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
         </div>
       </div>
  
-      <div class="panel reveal" style="--d:1.45s">
-        <h2>Video Progress</h2>
-        <p>Script: 50% Done // When: Prob Early October</p>
-      </div>
     </div>
  
     <div class="side right">
@@ -343,6 +357,8 @@
       </div>
     </div>
   </main>
+  </div>
 </body>
 </html>
+
  
