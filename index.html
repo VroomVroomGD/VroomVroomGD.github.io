@@ -112,6 +112,26 @@
     animation: pop 0.8s cubic-bezier(.2,.8,.3,1) 0.55s both;
   }
  
+ 
+  .tagline {
+    position: absolute;
+    top: 260px;
+    left: 50%;
+    translate: -50% 0;
+    width: max-content;
+    max-width: 250px;
+    padding: 0.2rem 1rem 0.3rem;
+    text-align: center;
+    font-size: 1.3rem;
+    font-weight: 700;
+    font-style: italic;
+    color: var(--cream);
+    background: #1a1416;           /* solid, so the divider line doesn't run through the text */
+    border: 2px solid rgba(246,237,232,0.35);
+    border-radius: 999px;
+    z-index: 12;
+  }
+ 
   .side  { padding: 36px 5vw; }
   .left  { padding-right: 140px; }
   .right { padding-left: 140px; }
@@ -148,6 +168,70 @@
   h2 { font-size: clamp(1.5rem, 2.4vw, 2rem); line-height: 1.1; margin-bottom: 0.6rem; }
   p  { font-size: clamp(1.1rem, 1.7vw, 1.35rem); line-height: 1.3; font-weight: 500; color: rgba(246,237,232,0.85); }
  
+ 
+  /* ---------- Channel stats + YouTube button ---------- */
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.8rem; margin: 1rem 0 0.9rem; }
+  .stat {
+    text-align: center;
+    padding: 0.7rem 0.4rem 0.6rem;
+    background: rgba(0,0,0,0.25);
+    border: 1px solid rgba(246,237,232,0.12);
+    border-radius: 12px;
+  }
+  .stat b { display: block; font-size: clamp(1.4rem, 2.3vw, 1.95rem); font-weight: 800; line-height: 1.1; }
+  .stat span { font-size: 0.95rem; font-weight: 500; color: rgba(246,237,232,0.7); }
+  .meta { margin-bottom: 1.1rem; }
+ 
+  .yt-btn {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.7rem;
+    padding: 0.75rem 1.4rem;
+    border-radius: 999px;
+    border: 2px solid rgba(246,237,232,0.55);
+    background: linear-gradient(180deg, #f0303c, #c81f2b);
+    color: #fff;
+    font-family: inherit;
+    font-size: 1.2rem;
+    font-weight: 800;
+    text-decoration: none;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+    transition: transform 0.25s cubic-bezier(.2,.8,.3,1), box-shadow 0.25s;
+    animation: ping 3.2s ease-out 2.4s infinite;   /* soft pulse to draw the eye */
+  }
+  .yt-btn svg { width: 1.9rem; height: auto; flex: none; transition: transform 0.3s cubic-bezier(.2,.8,.3,1); }
+  .yt-btn::before {                                /* light sweep on hover */
+    content: "";
+    position: absolute;
+    top: 0; left: -75%;
+    width: 45%; height: 100%;
+    background: linear-gradient(100deg, transparent, rgba(255,255,255,0.5), transparent);
+    transform: skewX(-20deg);
+    transition: left 0.65s ease;
+  }
+  .yt-btn:hover, .yt-btn:focus-visible {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 12px 26px rgba(0,0,0,0.45), 0 0 26px rgba(255,59,74,0.55);
+    animation: none;
+  }
+  .yt-btn:hover::before, .yt-btn:focus-visible::before { left: 130%; }
+  .yt-btn:hover svg, .yt-btn:focus-visible svg { transform: scale(1.18) rotate(-6deg); }
+  .yt-btn:active { transform: translateY(0) scale(0.98); }
+  .yt-btn:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+ 
+  @keyframes ping {
+    0%   { box-shadow: 0 6px 18px rgba(0,0,0,0.35), 0 0 0 0 rgba(255,59,74,0.55); }
+    70%, 100% { box-shadow: 0 6px 18px rgba(0,0,0,0.35), 0 0 0 16px rgba(255,59,74,0); }
+  }
+ 
+  @media (prefers-reduced-motion: reduce) {
+    .yt-btn { animation: none; transition: none; }
+    .yt-btn::before { display: none; }
+  }
+ 
   /* ---------- Load-in animation (one sequence: line, logo, titles, panels) ---------- */
   .reveal { animation: rise 0.8s cubic-bezier(.2,.7,.3,1) var(--d, 0s) both; }
  
@@ -177,6 +261,7 @@
     }
     .divider { display: none; }
     .page { grid-template-columns: 1fr; }
+    .tagline { position: static; translate: none; margin: 10px auto 0; }
     .logo { position: static; translate: none; display: block; margin: 16px auto 0; width: 130px; height: 130px; }
     .side, .left, .right { padding: 24px 5vw; }
     .right { border-top: 2px solid rgba(246,237,232,0.3); margin-top: 8px; }
@@ -192,18 +277,28 @@
  
   <main class="page">
     <img class="logo" src="Logo.png" alt="VroomVroom logo">
+    <p class="tagline reveal" style="--d:1.2s">i wanna be the guy</p>
  
     <div class="side left">
       <h1 class="reveal" style="--d:.8s">VroomVroom</h1>
  
       <div class="panel reveal" style="--d:1s">
         <h2>Channel Statistics</h2>
-        <p>Subscriber count, total views, and channel growth will be shown here.</p>
+        <div class="stats">
+          <div class="stat"><b>2.45K</b><span>Subscribers</span></div>
+          <div class="stat"><b>33</b><span>Videos</span></div>
+          <div class="stat"><b>216,321</b><span>Views</span></div>
+        </div>
+        <p class="meta">Creating videos since February 2022.</p>
+        <a class="yt-btn" href="https://www.youtube.com/@VroomFR" target="_blank" rel="noopener">
+          <svg viewBox="0 0 28 20" aria-hidden="true"><rect width="28" height="20" rx="5" fill="#fff"/><path d="M11 5.5v9l8-4.5z" fill="#c81f2b"/></svg>
+          Watch on YouTube
+        </a>
       </div>
  
       <div class="panel reveal" style="--d:1.15s">
         <h2>Video Progress</h2>
-        <p>Follow what's currently in production and which videos are releasing next.</p>
+        <p>New videos roughly twice a month. Updates on what's being made next will be posted here.</p>
       </div>
     </div>
  
@@ -218,5 +313,3 @@
   </main>
 </body>
 </html>
-
- 
