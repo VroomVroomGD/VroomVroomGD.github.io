@@ -847,7 +847,9 @@
     font-weight: 800;
     box-shadow: 0 0 0 2px rgba(0,0,0,0.4), 0 0 14px var(--glow);
   }
-  .avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .avatar { position: relative; }
+  .avatar img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; background: #fff; }
+  .qcard.r2 .avatar img { image-rendering: pixelated; }
   .qcard figcaption b { display: block; font-size: 1.15rem; line-height: 1.1; color: var(--nm); }
   .qcard figcaption small { font-size: 0.85rem; font-weight: 600; color: rgba(246,237,232,0.6); }
   .qcard blockquote {
@@ -1027,17 +1029,17 @@
         <h2>Top Players Say</h2>
         <div class="quotes">
           <figure class="qcard r1">
-            <div class="avatar" aria-hidden="true">C</div>
+            <div class="avatar" aria-hidden="true"><span class="ini">C</span><img src="pfp-clonkgmd.png" alt="" loading="lazy" onerror="this.remove()"></div>
             <figcaption><b>ClonkGMD</b><small>#1 Player</small></figcaption>
             <blockquote>Great List! Love that im top one!</blockquote>
           </figure>
           <figure class="qcard r2">
-            <div class="avatar" aria-hidden="true">P</div>
+            <div class="avatar" aria-hidden="true"><span class="ini">P</span><img src="pfp-prankz.png" alt="" loading="lazy" onerror="this.remove()"></div>
             <figcaption><b>Prankz</b><small>#2 Player</small></figcaption>
             <blockquote>Awesome, but Code Red should be moved UP.</blockquote>
           </figure>
           <figure class="qcard r3">
-            <div class="avatar" aria-hidden="true">G</div>
+            <div class="avatar" aria-hidden="true"><span class="ini">G</span><img src="pfp-gold-e.png" alt="" loading="lazy" onerror="this.remove()"></div>
             <figcaption><b>Gold-e</b><small>#3 Player</small></figcaption>
             <blockquote>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</blockquote>
           </figure>
