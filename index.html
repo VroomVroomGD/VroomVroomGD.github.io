@@ -129,7 +129,7 @@
     position: relative;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    min-height: 100%;
+    min-height: 0;
     padding: 7px;
   }
 
@@ -166,7 +166,12 @@
     z-index: 12;
   }
 
-  .side  { padding: 36px 5vw; }
+  .side {
+    position: relative;
+    min-width: 0;
+    padding: 56px 5vw 36px;
+    transition: padding 0.6s cubic-bezier(.65,0,.25,1), filter 0.35s ease, visibility 0s;
+  }
   .left  { padding-right: 140px; }
   .right { padding-left: 140px; }
 
@@ -448,6 +453,249 @@
     to   { opacity: 0; transform: translate(-50%, -80px); }
   }
 
+
+  /* ---------- Full screen for each side ---------- */
+  .bg-alt {
+    position: fixed; inset: -40px; z-index: -4;
+    filter: blur(7px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.8s ease;
+  }
+  .bg-alt.left  { background: conic-gradient(rgba(0,0,0,0.22) 25%, transparent 0 50%, rgba(0,0,0,0.22) 0 75%, transparent 0) 0 0 / var(--check-size) var(--check-size), linear-gradient(135deg, #b3202b, #8c1a24); }
+  .bg-alt.right { background: conic-gradient(rgba(0,0,0,0.22) 25%, transparent 0 50%, rgba(0,0,0,0.22) 0 75%, transparent 0) 0 0 / var(--check-size) var(--check-size), linear-gradient(135deg, #342a2b, #211b1d); }
+  body.full-left  .bg-alt.left  { opacity: 1; }
+  body.full-right .bg-alt.right { opacity: 1; }
+
+  .blend { transition: opacity 0.6s ease; }
+  body[class*="full-"] .blend { opacity: 0; }
+
+  .page { transition: grid-template-columns 0.6s cubic-bezier(.65,0,.25,1); }
+  body.full-left  .page { grid-template-columns: 1fr 0fr; }
+  body.full-right .page { grid-template-columns: 0fr 1fr; }
+
+  /* the side that goes away */
+  body.full-left  .side.right,
+  body.full-right .side.left {
+    overflow: hidden;
+    padding-left: 0; padding-right: 0;
+    visibility: hidden;
+    filter: opacity(0);
+    pointer-events: none;
+    transition: padding 0.6s cubic-bezier(.65,0,.25,1), filter 0.35s ease, visibility 0s 0.6s;
+  }
+  /* the side that stays gets the whole width */
+  body[class*="full-"] .side { padding-left: 5vw; padding-right: 5vw; }
+  body[class*="full-"] .side.right.gone, body[class*="full-"] .side.left.gone { padding-left: 0; padding-right: 0; }
+
+  /* centre logo, tagline and line fade away (filter, because their load animations own opacity) */
+  .divider { transition: opacity 0.4s ease; }
+  .logo, .tagline { transition: filter 0.4s ease, visibility 0s; }
+  body[class*="full-"] .divider { opacity: 0; }
+  body[class*="full-"] .logo, body[class*="full-"] .tagline {
+    filter: opacity(0); visibility: hidden; pointer-events: none;
+    transition: filter 0.4s ease, visibility 0s 0.4s;
+  }
+
+  /* short fade while the layout switches between normal and expanded */
+  .side > *:not(.expand) { transition: filter 0.3s ease; }
+  body.swap .side > *:not(.expand) { filter: opacity(0); }
+
+  /* the button */
+  .expand {
+    position: absolute;
+    top: 12px;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.3rem 0.85rem 0.3rem 0.35rem;
+    border: 2px solid rgba(246,237,232,0.4);
+    border-radius: 999px;
+    background: rgba(0,0,0,0.3);
+    -webkit-backdrop-filter: blur(6px);
+            backdrop-filter: blur(6px);
+    color: var(--cream);
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: transform 0.25s cubic-bezier(.2,.8,.3,1), border-color 0.25s, box-shadow 0.25s;
+    animation: fade 0.7s ease-out 1.6s both;
+  }
+  .side.left  .expand { left: 12px; }
+  .side.right .expand { right: 12px; }
+  .expand img { width: 28px; height: 28px; border-radius: 6px; border: 2px solid var(--cream); background: #000; }
+  .side.left .expand img { image-rendering: pixelated; }
+  .expand svg { width: 1rem; height: 1rem; flex: none; }
+  .expand .i-close { display: none; }
+  .expand[aria-expanded="true"] .i-open  { display: none; }
+  .expand[aria-expanded="true"] .i-close { display: block; }
+  .expand:hover, .expand:focus-visible { transform: translateY(-2px); border-color: var(--gold); box-shadow: 0 8px 20px rgba(0,0,0,0.4), 0 0 20px rgba(228,185,98,0.3); }
+  .expand:active { transform: translateY(0) scale(0.97); }
+  .expand:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+
+  /* big logo that appears on the expanded side */
+  .badge {
+    display: none;
+    width: 120px; height: 120px;
+    margin: 0 auto 1.2rem;
+    border: 4px solid var(--cream);
+    border-radius: 10px;
+    background: #000;
+    box-shadow: 0 0 0 3px rgba(0,0,0,0.5), 0 12px 26px rgba(0,0,0,0.5);
+  }
+  .side.left  .badge { image-rendering: pixelated; box-shadow: 0 0 0 3px rgba(0,0,0,0.5), 0 0 30px rgba(255,59,74,0.45), 0 12px 26px rgba(0,0,0,0.5); }
+  .side.right .badge { box-shadow: 0 0 0 3px rgba(0,0,0,0.5), 0 0 30px rgba(228,185,98,0.4), 0 12px 26px rgba(0,0,0,0.5); }
+  body.full-left  .side.left  .badge,
+  body.full-right .side.right .badge { display: block; animation: pop 0.7s cubic-bezier(.2,.8,.3,1) both; }
+
+  /* expanded layout: boxes spread into two columns */
+  body.spread .side.left, body.spread .side.right {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.6rem;
+    align-content: start;
+    align-items: start;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  body.spread .side > .badge, body.spread .side > h1 { grid-column: 1 / -1; }
+  body.spread .side > .panel { margin-bottom: 0; }
+  body.spread .side.right { grid-template-rows: auto auto auto 1fr; }
+  body.spread .side.right .p-latest { grid-column: 1; grid-row: 3; }
+  body.spread .side.right .p-top    { grid-column: 2; grid-row: 3 / span 2; }
+  body.spread .side.right .p-ids    { grid-column: 1; grid-row: 4; }
+  body.spread .list-box { max-height: 58vh; }
+  body.spread .side.left .panel:has(iframe) { align-self: stretch; }
+
+  @media (max-width: 800px) {
+    body[class*="full-"] .page { grid-template-columns: 1fr; }
+    body.full-left  .side.right, body.full-right .side.left { display: none; }
+    body[class*="full-"] .logo, body[class*="full-"] .tagline { display: none; }
+    body.spread .side.left, body.spread .side.right { grid-template-columns: 1fr; }
+    body.spread .side.right .p-latest, body.spread .side.right .p-top, body.spread .side.right .p-ids { grid-column: 1; grid-row: auto; }
+    body.spread .list-box { max-height: 380px; }
+    body.full-right .side.right { border-top: none; margin-top: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .expand, .page, .side, .bg-alt, .blend, .divider, .logo, .tagline, .side > * { transition: none !important; }
+    .expand { animation: none; }
+    body[class*="full-"] .badge { animation: none !important; }
+  }
+
+
+  /* ---------- Links section (below both sides) ---------- */
+  .links {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 12px 5vw 44px;
+  }
+  .links-card {
+    padding: 1.6rem 1.8rem 1.9rem;
+    background: rgba(0,0,0,0.22);
+    border: 2px solid rgba(246,237,232,0.16);
+    border-radius: 22px;
+    -webkit-backdrop-filter: blur(6px);
+            backdrop-filter: blur(6px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  }
+  .links h2 { font-size: clamp(1.8rem, 3vw, 2.4rem); text-align: center; text-shadow: 0 2px 12px rgba(0,0,0,0.4); margin-bottom: 0; }
+  .links h2::after {
+    content: "";
+    display: block;
+    width: 96px; height: 4px;
+    margin: 12px auto 1.6rem;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--logo-red), var(--gold));
+    box-shadow: 0 0 12px rgba(228,185,98,0.4);
+  }
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; }
+  .tile {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    gap: 0.95rem;
+    padding: 0.85rem 1.1rem;
+    border: 2px solid rgba(246,237,232,0.16);
+    border-radius: 16px;
+    background: rgba(0,0,0,0.25);
+    color: var(--cream);
+    text-decoration: none;
+    transition: transform 0.25s cubic-bezier(.2,.8,.3,1), border-color 0.25s, box-shadow 0.25s;
+  }
+  .tile .ico {
+    flex: none;
+    width: 48px; height: 48px;
+    display: grid; place-items: center;
+    overflow: hidden;
+    border-radius: 12px;
+    background: var(--c, #555);
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: 800;
+  }
+  .tile .ico img { width: 100%; height: 100%; object-fit: cover; }
+  .tile .ico svg { width: 26px; height: auto; }
+  .tile .info { flex: 1; min-width: 0; }
+  .tile b { display: block; font-size: 1.2rem; line-height: 1.1; }
+  .tile small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 0.95rem; font-weight: 500; color: rgba(246,237,232,0.65); }
+  .tile .go { flex: none; width: 1.1rem; height: 1.1rem; opacity: 0.55; transition: transform 0.25s, opacity 0.25s; }
+  .tile::before {
+    content: "";
+    position: absolute;
+    top: 0; left: -75%;
+    width: 45%; height: 100%;
+    background: linear-gradient(100deg, transparent, rgba(255,255,255,0.18), transparent);
+    transform: skewX(-20deg);
+    transition: left 0.65s ease;
+  }
+  a.tile:hover, a.tile:focus-visible {
+    transform: translateY(-3px);
+    border-color: var(--gold);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.4), 0 0 22px rgba(228,185,98,0.28);
+  }
+  a.tile:hover::before, a.tile:focus-visible::before { left: 130%; }
+  a.tile:hover .go, a.tile:focus-visible .go { transform: translateX(4px); opacity: 1; }
+  a.tile:active { transform: translateY(0) scale(0.98); }
+  a.tile:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+  .tile.soon { border-style: dashed; opacity: 0.5; cursor: default; }
+  @media (prefers-reduced-motion: reduce) { .tile, .tile::before, .tile .go { transition: none; } }
+
+
+  /* ---------- Gold / silver / bronze for the top 3 ---------- */
+  .rank-list li.top {
+    margin-bottom: 4px;
+    padding: 0.7rem 0.6rem 0.7rem 0.4rem;
+    border-bottom: none;
+    border-left: 3px solid var(--m1);
+    border-radius: 12px;
+    background: linear-gradient(90deg, var(--tint), transparent 75%);
+  }
+  .rank-list li.top .rk {
+    justify-self: end;
+    width: 2.2rem; height: 2.2rem;
+    display: grid; place-items: center;
+    border-radius: 50%;
+    color: #2a1a08;
+    font-size: 1.1rem;
+    background: linear-gradient(115deg, var(--m2) 0%, var(--m1) 35%, rgba(255,255,255,0.95) 50%, var(--m1) 65%, var(--m2) 100%);
+    background-size: 260% 100%;
+    box-shadow: 0 0 0 2px rgba(0,0,0,0.35), 0 0 16px var(--glow), inset 0 1px 0 rgba(255,255,255,0.55);
+    animation: medal 4.5s ease-in-out infinite;
+  }
+  @keyframes medal { 0%, 55% { background-position: 130% 0; } 100% { background-position: -130% 0; } }
+  .rank-list li.top .nm b { font-size: 1.15rem; }
+  .rank-list li.r1 { --m1: #f2c94c; --m2: #b5831f; --tint: rgba(242,201,76,0.17); --glow: rgba(242,201,76,0.5); }
+  .rank-list li.r2 { --m1: #d9dde3; --m2: #8a929c; --tint: rgba(217,221,227,0.13); --glow: rgba(217,221,227,0.4); }
+  .rank-list li.r3 { --m1: #dc9a62; --m2: #8a5227; --tint: rgba(205,127,50,0.17); --glow: rgba(220,154,98,0.45); }
+  .rank-list li.r1 .nm b { color: #f6d774; }
+  .rank-list li.r2 .nm b { color: #e8ebef; }
+  .rank-list li.r3 .nm b { color: #e5a674; }
+  @media (prefers-reduced-motion: reduce) { .rank-list li.top .rk { animation: none; } }
+
   /* ---------- Load-in animation (one sequence: line, logo, titles, panels) ---------- */
   .reveal { animation: rise 0.8s cubic-bezier(.2,.7,.3,1) var(--d, 0s) both; }
 
@@ -479,13 +727,15 @@
     .page { grid-template-columns: 1fr; }
     .tagline { position: static; translate: none; margin: 10px auto 0; }
     .logo { position: static; translate: none; display: block; margin: 16px auto 0; width: 130px; height: 130px; }
-    .side, .left, .right { padding: 24px 5vw; }
+    .side, .left, .right { padding: 64px 5vw 24px; }
     .right { border-top: 2px solid rgba(246,237,232,0.3); margin-top: 8px; }
   }
 </style>
 </head>
 <body>
   <div class="bg"></div>
+  <div class="bg-alt left"></div>
+  <div class="bg-alt right"></div>
   <div class="blend"></div>
   <div class="vignette"></div>
   <div class="frame"></div>
@@ -497,6 +747,13 @@
     <p class="tagline reveal" style="--d:1.2s">i wanna be the guy</p>
 
     <div class="side left">
+      <button class="expand" type="button" data-side="left" data-name="VroomVroom" aria-expanded="false" aria-label="View VroomVroom in full screen">
+        <img src="Logo.png" alt="">
+        <span class="txt">Full screen</span>
+        <svg class="i-open" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 4h6v2H6v4H4V4zm10 0h6v6h-2V6h-4V4zM4 14h2v4h4v2H4v-6zm14 0h2v4h-2v0h-4v2h6v-6z"/></svg>
+        <svg class="i-close" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 4h2v6H4V8h4V4zm6 0h2v4h4v2h-6V4zM4 14h6v6H8v-4H4v-2zm10 0h6v2h-4v4h-2v-6z"/></svg>
+      </button>
+      <img class="badge" src="Logo.png" alt="VroomVroom logo">
       <h1 class="reveal" style="--d:.8s">VroomVroom</h1>
 
       <div class="panel reveal" style="--d:1s">
@@ -546,9 +803,16 @@
     </div>
 
     <div class="side right">
+      <button class="expand" type="button" data-side="right" data-name="Cilkocrate" aria-expanded="false" aria-label="View Cilkocrate in full screen">
+        <img src="cilkocrate-icon.png" alt="">
+        <span class="txt">Full screen</span>
+        <svg class="i-open" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 4h6v2H6v4H4V4zm10 0h6v6h-2V6h-4V4zM4 14h2v4h4v2H4v-6zm14 0h2v4h-2v0h-4v2h6v-6z"/></svg>
+        <svg class="i-close" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 4h2v6H4V8h4V4zm6 0h2v4h4v2h-6V4zM4 14h6v6H8v-4H4v-2zm10 0h6v2h-4v4h-2v-6z"/></svg>
+      </button>
+      <img class="badge" src="cilkocrate-icon.png" alt="Cilkocrate logo">
       <h1 class="reveal" style="--d:.9s">Cilkocrate</h1>
 
-      <div class="panel reveal" style="--d:1.1s">
+      <div class="panel p-latest reveal" style="--d:1.1s">
         <h2>Latest Updates</h2>
         <p>Stuff About Cilkocrate will be posted here.</p>
         <a class="yt-btn gold" href="https://cilkocrate.vroomvroom.workers.dev/#/" target="_blank" rel="noopener">
@@ -557,13 +821,13 @@
         </a>
       </div>
 
-      <div class="panel reveal" style="--d:1.25s">
+      <div class="panel p-top reveal" style="--d:1.25s">
         <h2>Top 20</h2>
         <div class="list-box">
         <ol class="rank-list">
-          <li class="top"><span class="rk">1</span><span class="nm"><b>Hilkomani 2</b><small>by VroomVroomFR</small></span></li>
-          <li class="top"><span class="rk">2</span><span class="nm"><b>Hilkomani</b><small>by VroomVroom</small></span></li>
-          <li class="top"><span class="rk">3</span><span class="nm"><b>CILKOTANI</b><small>by EpicalGD</small></span></li>
+          <li class="top r1"><span class="rk">1</span><span class="nm"><b>Hilkomani 2</b><small>by VroomVroomFR</small></span></li>
+          <li class="top r2"><span class="rk">2</span><span class="nm"><b>Hilkomani</b><small>by VroomVroom</small></span></li>
+          <li class="top r3"><span class="rk">3</span><span class="nm"><b>CILKOTANI</b><small>by EpicalGD</small></span></li>
           <li><span class="rk">4</span><span class="nm"><b>Code Red Full</b><small>by PonchoMitten</small></span></li>
           <li><span class="rk">5</span><span class="nm"><b>Space From The UK</b><small>by Confinmo</small></span></li>
           <li><span class="rk">6</span><span class="nm"><b>Top 7 level Max</b><small>by Couch</small></span></li>
@@ -586,7 +850,7 @@
         <a class="more" href="https://cilkocrate.vroomvroom.workers.dev/#/" target="_blank" rel="noopener">See all 75 levels on the Cilkocrate website</a>
       </div>
 
-      <div class="panel reveal" style="--d:1.4s">
+      <div class="panel p-ids reveal" style="--d:1.4s">
         <button class="ids-toggle" type="button" aria-expanded="false" aria-controls="ids-body">
           Show Level IDs
           <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7.4 8.6 12 13.2l4.6-4.6L18 10l-6 6-6-6z"/></svg>
@@ -603,6 +867,35 @@
       </div>
     </div>
   </main>
+
+  <section class="links reveal" style="--d:1.6s" aria-label="Links">
+    <div class="links-card">
+      <h2>Find Me Everywhere</h2>
+      <div class="tiles">
+        <a class="tile" href="https://www.youtube.com/@VroomFR" target="_blank" rel="noopener">
+          <span class="ico" style="--c:#e62117"><svg viewBox="0 0 28 20" aria-hidden="true"><rect width="28" height="20" rx="5" fill="#fff"/><path d="M11 5.5v9l8-4.5z" fill="#e62117"/></svg></span>
+          <span class="info"><b>YouTube</b><small>@VroomFR</small></span>
+          <svg class="go" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8.6 7.4 13.2 12l-4.6 4.6L10 18l6-6-6-6z"/></svg>
+        </a>
+        <a class="tile" href="https://cilkocrate.vroomvroom.workers.dev/#/" target="_blank" rel="noopener">
+          <span class="ico"><img src="cilkocrate-icon.png" alt=""></span>
+          <span class="info"><b>Cilkocrate</b><small>The full level list</small></span>
+          <svg class="go" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8.6 7.4 13.2 12l-4.6 4.6L10 18l6-6-6-6z"/></svg>
+        </a>
+        <a class="tile" href="https://gdbrowser.com/u/vroomvroomFR" target="_blank" rel="noopener">
+          <span class="ico" style="--c:#2a7de1;font-size:1.15rem">GD</span>
+          <span class="info"><b>GDBrowser</b><small>vroomvroomFR</small></span>
+          <svg class="go" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8.6 7.4 13.2 12l-4.6 4.6L10 18l6-6-6-6z"/></svg>
+        </a>
+        <a class="tile" href="https://www.roblox.com/users/1508464264/profile" target="_blank" rel="noopener">
+          <span class="ico" style="--c:#e2231a">R</span>
+          <span class="info"><b>Roblox</b><small>My profile</small></span>
+          <svg class="go" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8.6 7.4 13.2 12l-4.6 4.6L10 18l6-6-6-6z"/></svg>
+        </a>
+        <div class="tile soon"><span class="ico" style="--c:#9146ff">T</span><span class="info"><b>Twitch</b><small>Link coming soon</small></span></div>
+      </div>
+    </div>
+  </section>
   </div>
 
 
@@ -684,6 +977,53 @@
         pop.addEventListener('animationend', function () { pop.remove(); });
         page.appendChild(pop);
       });
+    })();
+  </script>
+
+  <script>
+    (function () {
+      var body = document.body;
+      var scroller = document.querySelector('.scroller');
+      var buttons = document.querySelectorAll('.expand');
+      var still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var mode = null, locked = false;
+
+      function labels() {
+        buttons.forEach(function (b) {
+          var on = b.getAttribute('data-side') === mode;
+          b.setAttribute('aria-expanded', on ? 'true' : 'false');
+          b.querySelector('.txt').textContent = on ? 'Back' : 'Full screen';
+          b.setAttribute('aria-label', on ? 'Exit full screen' : 'View ' + b.getAttribute('data-name') + ' in full screen');
+        });
+      }
+      function later(fn, ms) { still ? fn() : setTimeout(fn, ms); }
+
+      function enter(side) {
+        if (locked) return; locked = true;
+        mode = side;
+        body.classList.add('full-' + side, 'swap');
+        scroller.scrollTo({ top: 0 });
+        labels();
+        later(function () { body.classList.add('spread'); body.classList.remove('swap'); }, 320);
+        later(function () { locked = false; }, 700);
+      }
+      function leave() {
+        if (locked || !mode) return; locked = true;
+        body.classList.add('swap');
+        later(function () {
+          body.classList.remove('spread', 'full-left', 'full-right', 'swap');
+          mode = null; labels();
+        }, 320);
+        later(function () { locked = false; }, 800);
+      }
+
+      buttons.forEach(function (b) {
+        b.addEventListener('click', function () {
+          var side = b.getAttribute('data-side');
+          mode === side ? leave() : enter(side);
+        });
+      });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') leave(); });
     })();
   </script>
 </body>
