@@ -563,10 +563,11 @@
   }
   body.spread .side > .badge, body.spread .side > h1 { grid-column: 1 / -1; }
   body.spread .side > .panel { margin-bottom: 0; }
-  body.spread .side.right { grid-template-rows: auto auto auto 1fr; }
+  body.spread .side.right { grid-template-rows: auto auto auto auto 1fr; }
   body.spread .side.right .p-latest { grid-column: 1; grid-row: 3; }
-  body.spread .side.right .p-top    { grid-column: 2; grid-row: 3 / span 2; }
-  body.spread .side.right .p-ids    { grid-column: 1; grid-row: 4; }
+  body.spread .side.right .p-top    { grid-column: 2; grid-row: 3 / span 3; }
+  body.spread .side.right .p-quotes { grid-column: 1; grid-row: 4; }
+  body.spread .side.right .p-ids    { grid-column: 1; grid-row: 5; }
   body.spread .list-box { max-height: 58vh; }
   body.spread .side.left .panel:has(iframe) { align-self: stretch; }
 
@@ -575,7 +576,7 @@
     body.full-left  .side.right, body.full-right .side.left { display: none; }
     body[class*="full-"] .logo, body[class*="full-"] .tagline { display: none; }
     body.spread .side.left, body.spread .side.right { grid-template-columns: 1fr; }
-    body.spread .side.right .p-latest, body.spread .side.right .p-top, body.spread .side.right .p-ids { grid-column: 1; grid-row: auto; }
+    body.spread .side.right .p-latest, body.spread .side.right .p-top, body.spread .side.right .p-quotes, body.spread .side.right .p-ids { grid-column: 1; grid-row: auto; }
     body.spread .list-box { max-height: 380px; }
     body.full-right .side.right { border-top: none; margin-top: 0; }
   }
@@ -817,6 +818,57 @@
     .vc-float { animation: none; opacity: 0; }
   }
 
+
+  /* ---------- Top players' quotes ---------- */
+  .quotes { display: grid; gap: 0.8rem; margin-top: 1rem; }
+  .qcard {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 0.2rem 0.9rem;
+    padding: 0.85rem 1rem 0.95rem;
+    border-left: 3px solid var(--m1);
+    border-radius: 14px;
+    background: linear-gradient(90deg, var(--tint), rgba(0,0,0,0.22) 70%);
+  }
+  .qcard.r1 { --m1: #f2c94c; --m2: #b5831f; --tint: rgba(242,201,76,0.14); --glow: rgba(242,201,76,0.45); --nm: #f6d774; }
+  .qcard.r2 { --m1: #d9dde3; --m2: #8a929c; --tint: rgba(217,221,227,0.11); --glow: rgba(217,221,227,0.35); --nm: #e8ebef; }
+  .qcard.r3 { --m1: #dc9a62; --m2: #8a5227; --tint: rgba(205,127,50,0.14); --glow: rgba(220,154,98,0.4); --nm: #e5a674; }
+  .avatar {
+    grid-row: 1 / span 1;
+    width: 52px; height: 52px;
+    display: grid; place-items: center;
+    overflow: hidden;
+    border-radius: 50%;
+    border: 3px solid var(--m1);
+    background: linear-gradient(145deg, #3a2c2f, #1c1416);
+    color: var(--nm);
+    font-size: 1.5rem;
+    font-weight: 800;
+    box-shadow: 0 0 0 2px rgba(0,0,0,0.4), 0 0 14px var(--glow);
+  }
+  .avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .qcard figcaption b { display: block; font-size: 1.15rem; line-height: 1.1; color: var(--nm); }
+  .qcard figcaption small { font-size: 0.85rem; font-weight: 600; color: rgba(246,237,232,0.6); }
+  .qcard blockquote {
+    grid-column: 1 / -1;
+    position: relative;
+    margin-top: 0.35rem;
+    padding-left: 1.6rem;
+    font-size: clamp(1rem, 1.5vw, 1.15rem);
+    font-style: italic;
+    font-weight: 500;
+    line-height: 1.35;
+    color: rgba(246,237,232,0.9);
+  }
+  .qcard blockquote::before {
+    content: "\201C";
+    position: absolute; left: 0; top: -0.25rem;
+    font-size: 2.4rem; font-weight: 800; font-style: normal; line-height: 1;
+    color: var(--m1);
+    opacity: 0.85;
+  }
+
   /* ---------- Load-in animation (one sequence: line, logo, titles, panels) ---------- */
   .reveal { animation: rise 0.8s cubic-bezier(.2,.7,.3,1) var(--d, 0s) both; }
 
@@ -971,7 +1023,28 @@
         <a class="more" href="https://cilkocrate.vroomvroom.workers.dev/#/" target="_blank" rel="noopener">See all 75 levels on the Cilkocrate website</a>
       </div>
 
-      <div class="panel p-ids reveal" style="--d:1.4s">
+      <div class="panel p-quotes reveal" style="--d:1.4s">
+        <h2>Top Players Say</h2>
+        <div class="quotes">
+          <figure class="qcard r1">
+            <div class="avatar" aria-hidden="true">C</div>
+            <figcaption><b>ClonkGMD</b><small>#1 Player</small></figcaption>
+            <blockquote>Great List! Love that im top one!</blockquote>
+          </figure>
+          <figure class="qcard r2">
+            <div class="avatar" aria-hidden="true">P</div>
+            <figcaption><b>Prankz</b><small>#2 Player</small></figcaption>
+            <blockquote>Awesome, but Code Red should be moved UP.</blockquote>
+          </figure>
+          <figure class="qcard r3">
+            <div class="avatar" aria-hidden="true">G</div>
+            <figcaption><b>Gold-e</b><small>#3 Player</small></figcaption>
+            <blockquote>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</blockquote>
+          </figure>
+        </div>
+      </div>
+
+      <div class="panel p-ids reveal" style="--d:1.55s">
         <button class="ids-toggle" type="button" aria-expanded="false" aria-controls="ids-body">
           Show Level IDs
           <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7.4 8.6 12 13.2l4.6-4.6L18 10l-6 6-6-6z"/></svg>
