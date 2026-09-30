@@ -715,6 +715,108 @@
   body.full-right .side.right .quote { color: var(--gold); }
   @media (prefers-reduced-motion: reduce) { body[class*="full-"] .quote { animation: none !important; } }
 
+
+  /* ---------- Secret: Vroom Clicker ---------- */
+  .vc-launch {
+    position: fixed; left: 32px; bottom: 32px; z-index: 20;
+    display: flex; align-items: center; gap: 0.55rem;
+    padding: 0.3rem 1rem 0.3rem 0.35rem;
+    border: 2px solid rgba(246,237,232,0.55);
+    border-radius: 999px;
+    background: rgba(20,14,16,0.78);
+    -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+    color: var(--cream);
+    font-family: inherit; font-size: 0.95rem; font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+    transition: transform 0.25s cubic-bezier(.2,.8,.3,1), border-color 0.25s, box-shadow 0.25s;
+  }
+  .vc-launch[hidden], .vc[hidden] { display: none; }
+  .vc-launch img { width: 28px; height: 28px; border-radius: 6px; border: 2px solid var(--cream); background: #000; image-rendering: pixelated; }
+  .vc-launch:hover, .vc-launch:focus-visible { transform: translateY(-3px); border-color: var(--gold); box-shadow: 0 10px 24px rgba(0,0,0,0.5), 0 0 22px rgba(228,185,98,0.3); }
+  .vc-launch:focus-visible, .vc button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+
+  .vc {
+    position: fixed; inset: 0; z-index: 30;
+    display: grid; place-items: center;
+    padding: 20px;
+    background: rgba(8,4,5,0.72);
+    -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+  .vc.open { opacity: 1; }
+  .vc-card {
+    position: relative;
+    width: min(100%, 400px);
+    max-height: 100%;
+    overflow-y: auto;
+    padding: 1.4rem 1.4rem 1.1rem;
+    text-align: center;
+    background: linear-gradient(180deg, rgba(58,26,30,0.96), rgba(28,20,22,0.97));
+    border: 4px solid var(--cream);
+    border-radius: 20px;
+    box-shadow: 0 0 0 2px rgba(0,0,0,0.5), 0 0 40px rgba(255,59,74,0.3), 0 20px 50px rgba(0,0,0,0.6);
+    transform: translateY(14px) scale(0.96);
+    transition: transform 0.3s cubic-bezier(.2,.8,.3,1);
+  }
+  .vc.open .vc-card { transform: none; }
+  .vc h2 { font-size: 1.7rem; margin: 0; }
+  .vc-intro { margin-top: 0.15rem; font-size: 1rem; font-style: italic; font-weight: 700; color: var(--gold); }
+  .vc-x {
+    position: absolute; top: 10px; right: 10px;
+    width: 34px; height: 34px;
+    display: grid; place-items: center;
+    border: 2px solid rgba(246,237,232,0.35); border-radius: 50%;
+    background: transparent; color: var(--cream); cursor: pointer;
+  }
+  .vc-x:hover { border-color: var(--gold); }
+  .vc-x svg { width: 14px; height: 14px; }
+  .vc-score { margin-top: 0.8rem; line-height: 1; }
+  .vc-score b { display: block; font-size: 2.8rem; font-weight: 800; color: #fff; text-shadow: 0 2px 0 #b3202b, 0 0 16px rgba(255,59,74,0.7); font-variant-numeric: tabular-nums; }
+  .vc-score span { font-size: 0.95rem; font-weight: 700; color: rgba(246,237,232,0.7); }
+  .vc-rates { display: flex; justify-content: center; gap: 0.6rem; margin-top: 0.5rem; }
+  .vc-rates span { padding: 0.15rem 0.7rem; border-radius: 999px; background: rgba(0,0,0,0.3); border: 1px solid rgba(246,237,232,0.14); font-size: 0.9rem; font-weight: 600; color: rgba(246,237,232,0.8); }
+  .vc-rates b { color: var(--gold); }
+  .vc-big {
+    position: relative;
+    display: block; margin: 0.9rem auto 1rem;
+    padding: 0; border: none; background: none; cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .vc-big img {
+    display: block; width: 150px; height: 150px;
+    border: 4px solid var(--cream); border-radius: 14px; background: #000;
+    image-rendering: pixelated;
+    box-shadow: 0 0 0 3px rgba(0,0,0,0.5), 0 0 30px rgba(255,59,74,0.5), 0 10px 24px rgba(0,0,0,0.5);
+    transition: transform 0.08s ease, box-shadow 0.2s;
+    user-select: none; -webkit-user-drag: none;
+  }
+  .vc-big:hover img { box-shadow: 0 0 0 3px rgba(0,0,0,0.5), 0 0 40px rgba(255,59,74,0.75), 0 10px 24px rgba(0,0,0,0.5); }
+  .vc-big:active img { transform: scale(0.92) rotate(-2deg); }
+  .vc-ups { display: grid; gap: 0.55rem; text-align: left; }
+  .vc-up {
+    display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 0.2rem 0.8rem;
+    padding: 0.6rem 0.9rem;
+    border: 2px solid rgba(246,237,232,0.25); border-radius: 14px;
+    background: rgba(0,0,0,0.3); color: var(--cream);
+    font-family: inherit; text-align: left; cursor: pointer;
+    transition: transform 0.2s cubic-bezier(.2,.8,.3,1), border-color 0.2s, background 0.2s;
+  }
+  .vc-up:not(:disabled):hover { transform: translateY(-2px); border-color: var(--gold); background: rgba(228,185,98,0.1); }
+  .vc-up:disabled { opacity: 0.45; cursor: not-allowed; }
+  .vc-up .t { font-size: 1.05rem; font-weight: 800; line-height: 1.1; }
+  .vc-up .d { grid-column: 1; font-size: 0.85rem; font-weight: 500; color: rgba(246,237,232,0.7); }
+  .vc-up .c { grid-column: 2; grid-row: 1 / span 2; padding: 0.25rem 0.7rem; border-radius: 999px; background: rgba(228,185,98,0.18); border: 1px solid rgba(228,185,98,0.5); color: var(--gold); font-size: 0.95rem; font-weight: 800; white-space: nowrap; }
+  .vc-reset { margin-top: 0.8rem; border: none; background: none; color: rgba(246,237,232,0.45); font-family: inherit; font-size: 0.8rem; font-weight: 600; text-decoration: underline; cursor: pointer; }
+  .vc-reset:hover { color: var(--cream); }
+  .vc-float { position: absolute; pointer-events: none; z-index: 2; font-size: 1.3rem; font-weight: 800; color: #fff; text-shadow: 0 2px 0 #b3202b, 0 0 10px rgba(255,59,74,0.8); animation: deathfloat 0.9s ease-out forwards; }
+  @media (max-width: 800px) { .vc-launch { left: 24px; bottom: 24px; } }
+  @media (prefers-reduced-motion: reduce) {
+    .vc, .vc-card, .vc-big img, .vc-up, .vc-launch { transition: none; }
+    .vc-float { animation: none; opacity: 0; }
+  }
+
   /* ---------- Load-in animation (one sequence: line, logo, titles, panels) ---------- */
   .reveal { animation: rise 0.8s cubic-bezier(.2,.7,.3,1) var(--d, 0s) both; }
 
@@ -918,6 +1020,27 @@
   </div>
 
 
+  <button id="vc-launch" class="vc-launch" type="button" hidden>
+    <img src="Logo.png" alt=""><span>Vroom Clicker</span>
+  </button>
+
+  <div id="vc" class="vc" hidden role="dialog" aria-modal="true" aria-labelledby="vc-title">
+    <div class="vc-card" id="vc-card">
+      <button class="vc-x" id="vc-x" type="button" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M5.7 4.3 12 10.6l6.3-6.3 1.4 1.4-6.3 6.3 6.3 6.3-1.4 1.4-6.3-6.3-6.3 6.3-1.4-1.4 6.3-6.3-6.3-6.3z"/></svg></button>
+      <h2 id="vc-title">Vroom Clicker</h2>
+      <p class="vc-intro" id="vc-intro">Secret unlocked! You clicked the logo 100 times.</p>
+      <div class="vc-score"><b id="vc-n">0</b><span>vrooms</span></div>
+      <div class="vc-rates"><span>per click <b id="vc-pc">1</b></span><span>per second <b id="vc-ps">0</b></span></div>
+      <button class="vc-big" id="vc-big" type="button" aria-label="Vroom!"><img src="Logo.png" alt=""></button>
+      <div class="vc-ups">
+        <button class="vc-up" type="button" data-up="power"><span class="t">Stronger Click</span><span class="d">+1 vroom per click</span><span class="c"></span></button>
+        <button class="vc-up" type="button" data-up="auto"><span class="t">Auto Driver</span><span class="d">+1 vroom every second</span><span class="c"></span></button>
+        <button class="vc-up" type="button" data-up="turbo"><span class="t">Turbo Engine</span><span class="d">+50% to everything</span><span class="c"></span></button>
+      </div>
+      <button class="vc-reset" id="vc-reset" type="button">Reset progress</button>
+    </div>
+  </div>
+
   <script>
     (function () {
       var toggle = document.querySelector('.ids-toggle');
@@ -978,6 +1101,7 @@
       var deaths = 0;
       logo.addEventListener('click', function () {
         deaths++;
+        if (deaths === 100 && window.vroomUnlock) window.vroomUnlock();
         if (still) return;
         if (logo.animate) {
           logo.animate(
@@ -1042,7 +1166,140 @@
           mode === side ? leave() : enter(side);
         });
       });
-      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') leave(); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !body.classList.contains('vc-open')) leave(); });
+    })();
+  </script>
+
+  <script>
+    (function () {
+      var KEY = 'vroomClicker';
+      var still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var st = { score: 0, power: 0, auto: 0, turbo: 0, unlocked: false };
+      try {
+        var o = JSON.parse(localStorage.getItem(KEY) || 'null');
+        if (o) {
+          ['score', 'power', 'auto', 'turbo'].forEach(function (k) {
+            if (typeof o[k] === 'number' && isFinite(o[k]) && o[k] >= 0) st[k] = o[k];
+          });
+          st.turbo = Math.min(st.turbo, 3);
+          st.unlocked = !!o.unlocked;
+        }
+      } catch (e) {}
+
+      var $ = function (id) { return document.getElementById(id); };
+      var overlay = $('vc'), card = $('vc-card'), launch = $('vc-launch'), big = $('vc-big'), intro = $('vc-intro');
+      var ups = document.querySelectorAll('.vc-up');
+      var cost = {
+        power: function (l) { return Math.floor(15 * Math.pow(1.5, l)); },
+        auto:  function (l) { return Math.floor(50 * Math.pow(1.6, l)); },
+        turbo: function (l) { return 300 * Math.pow(3, l); }
+      };
+      var MAX_TURBO = 3, lastFocus = null;
+
+      function mult() { return 1 + 0.5 * st.turbo; }
+      function perClick() { return (1 + st.power) * mult(); }
+      function perSec() { return st.auto * mult(); }
+      function whole(n) { return Math.floor(n).toLocaleString('en-US'); }
+      function rate(n) { return (Math.round(n * 10) / 10).toLocaleString('en-US'); }
+      function save() { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} }
+
+      function render() {
+        $('vc-n').textContent = whole(st.score);
+        $('vc-pc').textContent = rate(perClick());
+        $('vc-ps').textContent = rate(perSec());
+        ups.forEach(function (b) {
+          var k = b.getAttribute('data-up'), lvl = st[k];
+          var c = b.querySelector('.c');
+          if (k === 'turbo' && lvl >= MAX_TURBO) { c.textContent = 'MAX'; b.disabled = true; return; }
+          var price = cost[k](lvl);
+          c.textContent = 'Lv ' + lvl + ' | ' + whole(price);
+          b.disabled = st.score < price;
+        });
+      }
+
+      function open(first) {
+        lastFocus = document.activeElement;
+        intro.hidden = !first;
+        overlay.hidden = false;
+        document.body.classList.add('vc-open');
+        render();
+        requestAnimationFrame(function () { overlay.classList.add('open'); });
+        big.focus({ preventScroll: true });
+      }
+      function close() {
+        overlay.classList.remove('open');
+        document.body.classList.remove('vc-open');
+        setTimeout(function () { overlay.hidden = true; }, still ? 0 : 260);
+        save();
+        if (lastFocus && lastFocus.focus) lastFocus.focus({ preventScroll: true });
+      }
+
+      window.vroomUnlock = function () {
+        var first = !st.unlocked;
+        st.unlocked = true; save();
+        launch.hidden = false;
+        open(first);
+      };
+      launch.hidden = !st.unlocked;
+      launch.addEventListener('click', function () { open(false); });
+      $('vc-x').addEventListener('click', close);
+      overlay.addEventListener('mousedown', function (e) { if (e.target === overlay) close(); });
+
+      big.addEventListener('click', function (e) {
+        var v = perClick();
+        st.score += v;
+        if (!still) {
+          var r = card.getBoundingClientRect();
+          var f = document.createElement('span');
+          f.className = 'vc-float';
+          f.textContent = '+' + rate(v);
+          var x = e.clientX ? e.clientX - r.left : r.width / 2;
+          var y = e.clientY ? e.clientY - r.top : 200;
+          f.style.left = (x - 12 + (Math.random() * 30 - 15)) + 'px';
+          f.style.top = (y - 28) + 'px';
+          f.addEventListener('animationend', function () { f.remove(); });
+          card.appendChild(f);
+        }
+        render();
+      });
+
+      ups.forEach(function (b) {
+        b.addEventListener('click', function () {
+          var k = b.getAttribute('data-up');
+          if (k === 'turbo' && st.turbo >= MAX_TURBO) return;
+          var price = cost[k](st[k]);
+          if (st.score < price) return;
+          st.score -= price; st[k]++;
+          save(); render();
+        });
+      });
+
+      $('vc-reset').addEventListener('click', function () {
+        if (window.confirm('Reset your Vroom Clicker progress?')) {
+          st.score = 0; st.power = 0; st.auto = 0; st.turbo = 0;
+          save(); render();
+        }
+      });
+
+      // Esc closes, Tab stays inside the box
+      document.addEventListener('keydown', function (e) {
+        if (overlay.hidden) return;
+        if (e.key === 'Escape') { close(); return; }
+        if (e.key === 'Tab') {
+          var f = overlay.querySelectorAll('button:not([disabled])');
+          if (!f.length) return;
+          var first = f[0], last = f[f.length - 1];
+          if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+          else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+        }
+      });
+
+      // Auto Driver income, once per second
+      var ticks = 0;
+      setInterval(function () {
+        if (st.auto > 0) { st.score += perSec(); if (!overlay.hidden) render(); }
+        if (++ticks % 5 === 0 && st.unlocked) save();
+      }, 1000);
     })();
   </script>
 </body>
