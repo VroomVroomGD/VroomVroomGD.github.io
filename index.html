@@ -871,6 +871,42 @@
     opacity: 0.85;
   }
 
+
+  /* ---------- Click-to-play video thumbnails ---------- */
+  .vplay { position: absolute; inset: 0; width: 100%; height: 100%; padding: 0; border: 0; background: #000; cursor: pointer; overflow: hidden; }
+  .vplay img { display: block; width: 100%; height: 100%; object-fit: cover; filter: brightness(0.8); transition: transform 0.6s cubic-bezier(.2,.7,.3,1), filter 0.3s; }
+  .vplay .pbtn { position: absolute; left: 50%; top: 50%; width: 68px; height: 48px; translate: -50% -50%; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.55)); transition: scale 0.25s cubic-bezier(.2,.8,.3,1); }
+  .vplay:hover img, .vplay:focus-visible img { transform: scale(1.05); filter: brightness(1); }
+  .vplay:hover .pbtn, .vplay:focus-visible .pbtn { scale: 1.14; }
+  .vplay:active .pbtn { scale: 0.96; }
+  .vplay:focus-visible { outline: 3px solid var(--gold); outline-offset: -3px; }
+  @media (prefers-reduced-motion: reduce) { .vplay img, .vplay .pbtn { transition: none; } }
+
+  /* ---------- Back to top ---------- */
+  .to-top {
+    position: fixed; right: 32px; bottom: 32px; z-index: 20;
+    width: 48px; height: 48px;
+    display: grid; place-items: center;
+    border: 2px solid rgba(246,237,232,0.55);
+    border-radius: 50%;
+    background: rgba(20,14,16,0.78);
+    -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+    color: var(--cream);
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+    opacity: 0; visibility: hidden; transform: translateY(12px);
+    transition: opacity 0.3s ease, transform 0.3s cubic-bezier(.2,.8,.3,1), visibility 0s 0.3s, border-color 0.25s, box-shadow 0.25s;
+  }
+  .to-top.show { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
+  .to-top svg { width: 22px; height: 22px; }
+  .to-top.show:hover, .to-top:focus-visible { transform: translateY(-3px); border-color: var(--gold); box-shadow: 0 10px 24px rgba(0,0,0,0.5), 0 0 22px rgba(228,185,98,0.3); }
+  .to-top:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+  @media (max-width: 800px) { .to-top { right: 24px; bottom: 24px; } }
+  @media (prefers-reduced-motion: reduce) { .to-top { transition: none; } }
+
+  /* ---------- Last updated note ---------- */
+  .links .updated { margin-top: 1rem; text-align: center; font-size: 0.9rem; font-weight: 500; color: rgba(246,237,232,0.55); }
+
   /* ---------- Load-in animation (one sequence: line, logo, titles, panels) ---------- */
   .reveal { animation: rise 0.8s cubic-bezier(.2,.7,.3,1) var(--d, 0s) both; }
 
@@ -963,15 +999,21 @@
 
       <div class="panel reveal" style="--d:1.3s">
         <h2>My Best Video</h2>
-        <div class="video">
-          <iframe src="https://www.youtube-nocookie.com/embed/MII1tY9DtlY" title="My Best Video" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        <div class="video" data-vid="MII1tY9DtlY" data-title="My Best Video">
+          <button class="vplay" type="button" aria-label="Play My Best Video">
+            <img src="https://i.ytimg.com/vi/MII1tY9DtlY/hqdefault.jpg" alt="" loading="lazy">
+            <svg class="pbtn" viewBox="0 0 68 48" aria-hidden="true"><rect width="68" height="48" rx="12" fill="#e62117"/><path d="M27 14v20l18-10z" fill="#fff"/></svg>
+          </button>
         </div>
       </div>
 
       <div class="panel reveal" style="--d:1.45s">
         <h2>My Most Recent Video</h2>
-        <div class="video">
-          <iframe src="https://www.youtube-nocookie.com/embed/SnEFyrIIUOo" title="My Most Recent Video" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        <div class="video" data-vid="SnEFyrIIUOo" data-title="My Most Recent Video">
+          <button class="vplay" type="button" aria-label="Play My Most Recent Video">
+            <img src="https://i.ytimg.com/vi/SnEFyrIIUOo/hqdefault.jpg" alt="" loading="lazy">
+            <svg class="pbtn" viewBox="0 0 68 48" aria-hidden="true"><rect width="68" height="48" rx="12" fill="#e62117"/><path d="M27 14v20l18-10z" fill="#fff"/></svg>
+          </button>
         </div>
       </div>
 
@@ -1091,6 +1133,7 @@
         <div class="tile soon"><span class="ico" style="--c:#9146ff">T</span><span class="info"><b>Twitch</b><small>Link coming soon</small></span></div>
       </div>
     </div>
+    <p class="updated">Stats and progress last updated <time datetime="2026-09-30">September 30, 2026</time></p>
   </section>
   </div>
 
@@ -1375,6 +1418,39 @@
         if (st.auto > 0) { st.score += perSec(); if (!overlay.hidden) render(); }
         if (++ticks % 5 === 0 && st.unlocked) save();
       }, 1000);
+    })();
+  </script>
+
+  <button id="to-top" class="to-top" type="button" aria-label="Back to top">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 7.5 5.3 14.2l1.4 1.4 5.3-5.3 5.3 5.3 1.4-1.4z"/></svg>
+  </button>
+
+  <script>
+    (function () {
+      var scroller = document.querySelector('.scroller');
+      var still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      /* back to top */
+      var top = document.getElementById('to-top');
+      function check() { top.classList.toggle('show', scroller.scrollTop > 500); }
+      scroller.addEventListener('scroll', check, { passive: true });
+      top.addEventListener('click', function () { scroller.scrollTo({ top: 0, behavior: still ? 'auto' : 'smooth' }); });
+      check();
+
+      /* videos only load when clicked */
+      document.querySelectorAll('.video[data-vid]').forEach(function (box) {
+        box.querySelector('.vplay').addEventListener('click', function () {
+          var f = document.createElement('iframe');
+          f.src = 'https://www.youtube-nocookie.com/embed/' + box.getAttribute('data-vid') + '?autoplay=1&rel=0';
+          f.title = box.getAttribute('data-title');
+          f.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+          f.referrerPolicy = 'strict-origin-when-cross-origin';
+          f.allowFullscreen = true;
+          box.textContent = '';
+          box.appendChild(f);
+          f.focus();
+        });
+      });
     })();
   </script>
 </body>
