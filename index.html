@@ -563,11 +563,12 @@
   }
   body.spread .side > .badge, body.spread .side > h1 { grid-column: 1 / -1; }
   body.spread .side > .panel { margin-bottom: 0; }
-  body.spread .side.right { grid-template-rows: auto auto auto auto 1fr; }
+  body.spread .side.right { grid-template-rows: auto auto auto auto auto auto 1fr; }
   body.spread .side.right .p-latest { grid-column: 1; grid-row: 3; }
-  body.spread .side.right .p-top    { grid-column: 2; grid-row: 3 / span 3; }
-  body.spread .side.right .p-quotes { grid-column: 1; grid-row: 4; }
-  body.spread .side.right .p-ids    { grid-column: 1; grid-row: 5; }
+  body.spread .side.right .p-top    { grid-column: 2; grid-row: 3 / span 4; }
+  body.spread .side.right .p-music  { grid-column: 1; grid-row: 4; }
+  body.spread .side.right .p-quotes { grid-column: 1; grid-row: 5; }
+  body.spread .side.right .p-ids    { grid-column: 1; grid-row: 6; }
   body.spread .list-box { max-height: 58vh; }
   body.spread .side.left .panel:has(iframe) { align-self: stretch; }
 
@@ -576,7 +577,7 @@
     body.full-left  .side.right, body.full-right .side.left { display: none; }
     body[class*="full-"] .logo, body[class*="full-"] .tagline { display: none; }
     body.spread .side.left, body.spread .side.right { grid-template-columns: 1fr; }
-    body.spread .side.right .p-latest, body.spread .side.right .p-top, body.spread .side.right .p-quotes, body.spread .side.right .p-ids { grid-column: 1; grid-row: auto; }
+    body.spread .side.right .p-latest, body.spread .side.right .p-top, body.spread .side.right .p-music, body.spread .side.right .p-quotes, body.spread .side.right .p-ids { grid-column: 1; grid-row: auto; }
     body.spread .list-box { max-height: 380px; }
     body.full-right .side.right { border-top: none; margin-top: 0; }
   }
@@ -907,6 +908,73 @@
   /* ---------- Last updated note ---------- */
   .links .updated { margin-top: 1rem; text-align: center; font-size: 0.9rem; font-weight: 500; color: rgba(246,237,232,0.55); }
 
+
+  /* ---------- Music (lives on the Cilkocrate side) ---------- */
+  .music-row { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 0.8rem; }
+  .np small { display: block; font-size: 0.85rem; font-weight: 700; font-style: italic; color: var(--gold); }
+  .np b { display: block; font-size: 1.2rem; line-height: 1.15; }
+  .np span { font-size: 0.95rem; font-weight: 500; color: rgba(246,237,232,0.65); }
+  .music-btn {
+    display: flex; align-items: center; gap: 0.55rem;
+    padding: 0.45rem 1rem 0.45rem 0.85rem;
+    border: 2px solid rgba(246,237,232,0.4);
+    border-radius: 999px;
+    background: rgba(0,0,0,0.3);
+    color: var(--cream);
+    font-family: inherit; font-size: 0.95rem; font-weight: 800;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: transform 0.25s cubic-bezier(.2,.8,.3,1), border-color 0.25s, box-shadow 0.25s;
+  }
+  .music-btn:hover, .music-btn:focus-visible { transform: translateY(-2px); border-color: var(--gold); box-shadow: 0 8px 20px rgba(0,0,0,0.4), 0 0 20px rgba(228,185,98,0.3); }
+  .music-btn:active { transform: translateY(0) scale(0.97); }
+  .music-btn:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+  .eq { display: flex; align-items: flex-end; gap: 3px; height: 16px; }
+  .eq i { width: 4px; height: 100%; border-radius: 2px; background: var(--gold); transform: scaleY(0.25); transform-origin: bottom; }
+  .music-btn.playing .eq i { animation: eq 0.9s ease-in-out infinite; }
+  .music-btn.playing .eq i:nth-child(2) { animation-delay: -0.3s; }
+  .music-btn.playing .eq i:nth-child(3) { animation-delay: -0.6s; }
+  @keyframes eq { 0%, 100% { transform: scaleY(0.25); } 50% { transform: scaleY(1); } }
+  .vol { display: flex; align-items: center; gap: 0.8rem; margin-top: 0.9rem; font-size: 0.9rem; font-weight: 700; color: rgba(246,237,232,0.7); }
+  .vol input { flex: 1; min-width: 0; accent-color: var(--gold); cursor: pointer; }
+  .music-mini { position: absolute; top: 12px; right: 12px; z-index: 3; display: none; background: rgba(0,0,0,0.35); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+  body.full-left .side.left .music-mini { display: flex; }
+  body.no-music .p-music, body.no-music .music-mini { display: none !important; }
+  @media (prefers-reduced-motion: reduce) {
+    .music-btn { transition: none; }
+    .music-btn.playing .eq i { animation: none; transform: scaleY(0.7); }
+  }
+
+  /* ---------- FAQ ---------- */
+  .faq { padding-bottom: 12px; }
+  .faq-list { display: grid; gap: 0.7rem; }
+  .qa { border: 2px solid rgba(246,237,232,0.16); border-radius: 14px; background: rgba(0,0,0,0.25); transition: border-color 0.25s, background 0.25s; }
+  .qa[open] { border-color: rgba(228,185,98,0.45); background: rgba(228,185,98,0.06); }
+  .qa summary {
+    display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+    padding: 0.9rem 1.1rem;
+    font-size: 1.15rem; font-weight: 800; line-height: 1.2;
+    list-style: none; cursor: pointer;
+    border-radius: 12px;
+    transition: color 0.2s;
+  }
+  .qa summary::-webkit-details-marker { display: none; }
+  .qa summary::after {
+    content: "";
+    flex: none;
+    width: 0.65rem; height: 0.65rem;
+    border-right: 3px solid var(--gold); border-bottom: 3px solid var(--gold);
+    transform: rotate(45deg) translate(-2px, -2px);
+    transition: transform 0.3s cubic-bezier(.2,.8,.3,1);
+  }
+  .qa[open] summary::after { transform: rotate(-135deg) translate(-2px, -2px); }
+  .qa summary:hover { color: var(--gold); }
+  .qa summary:focus-visible { outline: 3px solid var(--gold); outline-offset: -3px; }
+  .qa-a { padding: 0 1.1rem 1rem; }
+  .qa[open] .qa-a { animation: rise 0.4s cubic-bezier(.2,.7,.3,1) both; }
+  .qa-a p { font-size: 1.05rem; }
+  @media (prefers-reduced-motion: reduce) { .qa, .qa summary::after { transition: none; } .qa[open] .qa-a { animation: none; } }
+
   /* ---------- Load-in animation (one sequence: line, logo, titles, panels) ---------- */
   .reveal { animation: rise 0.8s cubic-bezier(.2,.7,.3,1) var(--d, 0s) both; }
 
@@ -964,6 +1032,7 @@
         <svg class="i-open" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 4h6v2H6v4H4V4zm10 0h6v6h-2V6h-4V4zM4 14h2v4h4v2H4v-6zm14 0h2v4h-2v0h-4v2h6v-6z"/></svg>
         <svg class="i-close" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 4h2v6H4V8h4V4zm6 0h2v4h4v2h-6V4zM4 14h6v6H8v-4H4v-2zm10 0h6v2h-4v4h-2v-6z"/></svg>
       </button>
+      <button class="music-btn music-mini" type="button" data-music-toggle aria-pressed="false"><span class="eq" aria-hidden="true"><i></i><i></i><i></i></span><span class="lbl">Music off</span></button>
       <img class="badge" src="Logo.png" alt="VroomVroom logo">
       <h1 class="reveal" style="--d:.8s">VroomVroom<span class="quote">i wanna be the guy</span></h1>
 
@@ -1038,6 +1107,14 @@
         </a>
       </div>
 
+      <div class="panel p-music reveal" style="--d:1.2s">
+        <div class="music-row">
+          <div class="np"><small>Now playing</small><b>Resurgence (Cilkotani)</b><span>by Epical</span></div>
+          <button class="music-btn" type="button" data-music-toggle aria-pressed="false"><span class="eq" aria-hidden="true"><i></i><i></i><i></i></span><span class="lbl">Music off</span></button>
+        </div>
+        <label class="vol"><span>Volume</span><input id="music-vol" type="range" min="0" max="100" value="35" aria-label="Music volume"></label>
+      </div>
+
       <div class="panel p-top reveal" style="--d:1.25s">
         <h2>Top 20</h2>
         <div class="list-box">
@@ -1106,7 +1183,35 @@
     </div>
   </main>
 
-  <section class="links reveal" style="--d:1.6s" aria-label="Links">
+  <section class="links faq reveal" style="--d:1.5s" aria-label="FAQ">
+    <div class="links-card">
+      <h2>FAQ</h2>
+      <div class="faq-list">
+        <details class="qa">
+          <summary>How often do you upload?</summary>
+          <div class="qa-a"><p>I try to put out about two videos a month. Hopefully they're good!</p></div>
+        </details>
+        <details class="qa">
+          <summary>What is Cilkocrate?</summary>
+          <div class="qa-a"><p>Cilkocrate is a series I made up. It has its own list of levels, top players and music, and the full list lives on the Cilkocrate website.</p></div>
+        </details>
+        <details class="qa">
+          <summary>Where can I see the full level list?</summary>
+          <div class="qa-a"><p>Hit the gold Visit the Cilkocrate Website button, or use the link under the Top 20. Both open the full list.</p></div>
+        </details>
+        <details class="qa">
+          <summary>How do I turn the music off?</summary>
+          <div class="qa-a"><p>Use the Music button in the Cilkocrate section. If you're viewing the VroomVroom side in full screen, it's in the top right corner.</p></div>
+        </details>
+        <details class="qa">
+          <summary>Are the stats and progress bars live?</summary>
+          <div class="qa-a"><p>No, I update them by hand, so they might be a little behind. Check the date at the very bottom of the page.</p></div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="links reveal" style="--d:1.65s" aria-label="Links">
     <div class="links-card">
       <h2>Find Me Everywhere</h2>
       <div class="tiles">
@@ -1133,7 +1238,7 @@
         <div class="tile soon"><span class="ico" style="--c:#9146ff">T</span><span class="info"><b>Twitch</b><small>Link coming soon</small></span></div>
       </div>
     </div>
-    <p class="updated">Stats and progress last updated <time datetime="2026-09-30">September 30, 2026</time></p>
+    <p class="updated">Last updated Sep 30 (might work on changes but im lazy.</p>
   </section>
   </div>
 
@@ -1451,6 +1556,53 @@
           f.focus();
         });
       });
+    })();
+  </script>
+
+  <audio id="bgm" src="resurgence-cilkotani.mp3" loop preload="none"></audio>
+
+  <script>
+    (function () {
+      var audio = document.getElementById('bgm');
+      var toggles = document.querySelectorAll('[data-music-toggle]');
+      var vol = document.getElementById('music-vol');
+      function get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+      function put(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+
+      var v = parseFloat(get('cilkoVol'));
+      if (!(v >= 0 && v <= 1)) v = 0.35;
+      audio.volume = v;
+      vol.value = Math.round(v * 100);
+      vol.addEventListener('input', function () { audio.volume = vol.value / 100; put('cilkoVol', audio.volume); });
+
+      function show(on) {
+        toggles.forEach(function (b) {
+          b.classList.toggle('playing', on);
+          b.setAttribute('aria-pressed', on ? 'true' : 'false');
+          b.querySelector('.lbl').textContent = on ? 'Music on' : 'Music off';
+        });
+      }
+      function play() {
+        return audio.play().then(function () { show(true); put('cilkoMusic', 'on'); return true; })
+                            .catch(function () { show(false); return false; });
+      }
+      function pause() { audio.pause(); show(false); put('cilkoMusic', 'off'); }
+
+      toggles.forEach(function (b) { b.addEventListener('click', function () { audio.paused ? play() : pause(); }); });
+
+      // missing file: hide the music controls instead of showing dead buttons
+      audio.addEventListener('error', function () { document.body.classList.add('no-music'); });
+
+      // Browsers block sound until the visitor interacts, so it starts on the first click, tap or key press
+      // (unless they turned it off before).
+      if (get('cilkoMusic') !== 'off') {
+        var evs = ['pointerdown', 'pointerup', 'touchend', 'click', 'keydown'];
+        var start = function (e) {
+          if (e.target && e.target.closest && e.target.closest('[data-music-toggle], #music-vol')) return;
+          play().then(function (ok) { if (ok) evs.forEach(function (n) { document.removeEventListener(n, start, true); }); });
+        };
+        evs.forEach(function (n) { document.addEventListener(n, start, true); });
+      }
     })();
   </script>
 </body>
