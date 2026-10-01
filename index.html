@@ -1047,6 +1047,10 @@
   .cd span { font-size: 0.85rem; font-weight: 500; color: rgba(246,237,232,0.7); }
   .cd:last-child b { color: var(--logo-red); }
 
+  /* ---------- Release day button (replaces the countdown when it hits zero) ---------- */
+  .yt-btn.release[hidden] { display: none; }
+  .yt-btn.release { margin-top: 0.2rem; padding: 1rem 1.6rem; font-size: 1.35rem; letter-spacing: 0.02em; animation: ping 1.6s ease-out infinite; }
+
   /* ---------- Theme picker ---------- */
   .mp-pop { position: absolute; right: 0; bottom: calc(100% + 10px); }
   .swatches { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.4rem; margin-top: 0.7rem; }
@@ -1183,6 +1187,10 @@
             <div class="cd"><b id="cd-m">00</b><span>Min</span></div>
             <div class="cd"><b id="cd-s">00</b><span>Sec</span></div>
           </div>
+          <a class="yt-btn release" id="cd-release" href="https://www.youtube.com/@VroomFR/videos" target="_blank" rel="noopener" hidden>
+            <svg viewBox="0 0 28 20" aria-hidden="true"><rect width="28" height="20" rx="5" fill="#fff"/><path d="M11 5.5v9l8-4.5z" fill="#c81f2b"/></svg>
+            NEW VIDEO OUT NOW
+          </a>
         </div>
       </div>
 
@@ -1801,6 +1809,8 @@
         if (ms <= 0) {
           els.d.textContent = els.h.textContent = els.m.textContent = els.s.textContent = '00';
           label.textContent = 'Release day is here';
+          document.querySelector('.cd-tiles').style.display = 'none';
+          document.getElementById('cd-release').hidden = false;
           return;
         }
         var t = Math.floor(ms / 1000);
