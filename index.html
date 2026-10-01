@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>VroomVroom</title>
+<script>try{var t=localStorage.getItem("theme");if(t&&t!=="crimson")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
 <meta name="description" content="The official VroomVroom site: channel stats, video progress, the latest videos and the Cilkocrate level list.">
 <meta name="theme-color" content="#b3202b">
 <link rel="canonical" href="https://vroomvroomgd.github.io/">
@@ -33,9 +34,16 @@
     --char:       #2c2426;   /* right side, warm charcoal */
     --cream:      #f6ede8;   /* text + border */
     --logo-red:   #ff3b4a;   /* left accent */
+    --accent-rgb: 255 59 74; /* same colour as --logo-red, for glows */
     --gold:       #e4b962;   /* right accent: antique gold suits the gothic title and sits well on red + charcoal */
     --check-size: 90px;
   }
+
+
+  /* ---------- Colour themes (picked with the palette button, bottom right) ---------- */
+  :root[data-theme="ocean"]  { --red: #1f66c2; --char: #222c36; --logo-red: #4aa8ff; --accent-rgb: 74 168 255; }
+  :root[data-theme="forest"] { --red: #1a7f45; --char: #232b26; --logo-red: #4ade80; --accent-rgb: 74 222 128; }
+  :root[data-theme="royal"]  { --red: #6b2fc0; --char: #2a2433; --logo-red: #b583ff; --accent-rgb: 181 131 255; }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { background: var(--char); }
@@ -57,8 +65,14 @@
     filter: blur(7px);
     background:
       linear-gradient(90deg,
-        var(--red) 0%, var(--red) 18%, #a5202a 26%, #85212a 36%, #612228 44%,
-        #4a2427 52%, #3a2426 60%, #302426 68%, var(--char) 78%, var(--char) 100%);
+        var(--red) 0%, var(--red) 18%,
+        color-mix(in srgb, var(--char) 10%, var(--red)) 26%,
+        color-mix(in srgb, var(--char) 34%, var(--red)) 36%,
+        color-mix(in srgb, var(--char) 61%, var(--red)) 44%,
+        color-mix(in srgb, var(--char) 78%, var(--red)) 52%,
+        color-mix(in srgb, var(--char) 90%, var(--red)) 60%,
+        color-mix(in srgb, var(--char) 97%, var(--red)) 68%,
+        var(--char) 78%, var(--char) 100%);
   }
 
   .blend {
@@ -141,7 +155,7 @@
     background: #000;
     border: 4px solid var(--cream);
     border-radius: 10px;
-    box-shadow: 0 0 0 3px rgba(0,0,0,0.5), 0 0 34px rgba(255,59,74,0.45), 0 12px 30px rgba(0,0,0,0.5);
+    box-shadow: 0 0 0 3px rgba(0,0,0,0.5), 0 0 34px rgb(var(--accent-rgb) / 0.45), 0 12px 30px rgba(0,0,0,0.5);
     z-index: 12;            /* sits above the divider line */
     animation: pop 0.8s cubic-bezier(.2,.8,.3,1) 0.55s both;
   }
@@ -181,7 +195,7 @@
     margin: 14px auto 2.4rem;
     border-radius: 4px;
     background: var(--logo-red);
-    box-shadow: 0 0 12px rgba(255,59,74,0.6);
+    box-shadow: 0 0 12px rgb(var(--accent-rgb) / 0.6);
   }
   .left h1  { font-size: clamp(2rem, 3.4vw, 3rem); font-weight: 800; }
   .right h1 {
@@ -367,8 +381,8 @@
     height: 100%;
     width: var(--p);
     border-radius: 999px;
-    background: linear-gradient(90deg, #c81f2b, #ff3b4a);
-    box-shadow: 0 0 12px rgba(255,59,74,0.55);
+    background: linear-gradient(90deg, color-mix(in srgb, black 22%, var(--logo-red)), var(--logo-red));
+    box-shadow: 0 0 12px rgb(var(--accent-rgb) / 0.55);
     animation: fill 1.2s cubic-bezier(.2,.7,.3,1) 1.5s both;
   }
   @keyframes fill { from { width: 0; } to { width: var(--p); } }
@@ -443,7 +457,7 @@
     font-size: 1.5rem;
     font-weight: 800;
     color: #fff;
-    text-shadow: 0 2px 0 #b3202b, 0 0 14px rgba(255,59,74,0.85);
+    text-shadow: 0 2px 0 var(--red), 0 0 14px rgb(var(--accent-rgb) / 0.85);
     animation: deathfloat 1.1s ease-out forwards;
   }
   @keyframes deathfloat {
@@ -460,8 +474,8 @@
     pointer-events: none;
     transition: opacity 0.8s ease;
   }
-  .bg-alt.left  { background: linear-gradient(135deg, #b3202b, #8c1a24); }
-  .bg-alt.right { background: linear-gradient(135deg, #342a2b, #211b1d); }
+  .bg-alt.left  { background: linear-gradient(135deg, var(--red), color-mix(in srgb, black 22%, var(--red))); }
+  .bg-alt.right { background: linear-gradient(135deg, color-mix(in srgb, white 5%, var(--char)), color-mix(in srgb, black 24%, var(--char))); }
   body.full-left  .bg-alt.left  { opacity: 1; }
   body.full-right .bg-alt.right { opacity: 1; }
 
@@ -543,7 +557,7 @@
     background: #000;
     box-shadow: 0 0 0 3px rgba(0,0,0,0.5), 0 12px 26px rgba(0,0,0,0.5);
   }
-  .side.left  .badge { image-rendering: pixelated; box-shadow: 0 0 0 3px rgba(0,0,0,0.5), 0 0 30px rgba(255,59,74,0.45), 0 12px 26px rgba(0,0,0,0.5); }
+  .side.left  .badge { image-rendering: pixelated; box-shadow: 0 0 0 3px rgba(0,0,0,0.5), 0 0 30px rgb(var(--accent-rgb) / 0.45), 0 12px 26px rgba(0,0,0,0.5); }
   .side.right .badge { box-shadow: 0 0 0 3px rgba(0,0,0,0.5), 0 0 30px rgba(228,185,98,0.4), 0 12px 26px rgba(0,0,0,0.5); }
   body.full-left  .side.left  .badge,
   body.full-right .side.right .badge { display: block; animation: pop 0.7s cubic-bezier(.2,.8,.3,1) both; }
@@ -755,7 +769,7 @@
     background: linear-gradient(180deg, rgba(58,26,30,0.96), rgba(28,20,22,0.97));
     border: 4px solid var(--cream);
     border-radius: 20px;
-    box-shadow: 0 0 0 2px rgba(0,0,0,0.5), 0 0 40px rgba(255,59,74,0.3), 0 20px 50px rgba(0,0,0,0.6);
+    box-shadow: 0 0 0 2px rgba(0,0,0,0.5), 0 0 40px rgb(var(--accent-rgb) / 0.3), 0 20px 50px rgba(0,0,0,0.6);
     transform: translateY(14px) scale(0.96);
     transition: transform 0.3s cubic-bezier(.2,.8,.3,1);
   }
@@ -772,7 +786,7 @@
   .vc-x:hover { border-color: var(--gold); }
   .vc-x svg { width: 14px; height: 14px; }
   .vc-score { margin-top: 0.8rem; line-height: 1; }
-  .vc-score b { display: block; font-size: 2.8rem; font-weight: 800; color: #fff; text-shadow: 0 2px 0 #b3202b, 0 0 16px rgba(255,59,74,0.7); font-variant-numeric: tabular-nums; }
+  .vc-score b { display: block; font-size: 2.8rem; font-weight: 800; color: #fff; text-shadow: 0 2px 0 var(--red), 0 0 16px rgb(var(--accent-rgb) / 0.7); font-variant-numeric: tabular-nums; }
   .vc-score span { font-size: 0.95rem; font-weight: 700; color: rgba(246,237,232,0.7); }
   .vc-rates { display: flex; justify-content: center; gap: 0.6rem; margin-top: 0.5rem; }
   .vc-rates span { padding: 0.15rem 0.7rem; border-radius: 999px; background: rgba(0,0,0,0.3); border: 1px solid rgba(246,237,232,0.14); font-size: 0.9rem; font-weight: 600; color: rgba(246,237,232,0.8); }
@@ -787,11 +801,11 @@
     display: block; width: 150px; height: 150px;
     border: 4px solid var(--cream); border-radius: 14px; background: #000;
     image-rendering: pixelated;
-    box-shadow: 0 0 0 3px rgba(0,0,0,0.5), 0 0 30px rgba(255,59,74,0.5), 0 10px 24px rgba(0,0,0,0.5);
+    box-shadow: 0 0 0 3px rgba(0,0,0,0.5), 0 0 30px rgb(var(--accent-rgb) / 0.5), 0 10px 24px rgba(0,0,0,0.5);
     transition: transform 0.08s ease, box-shadow 0.2s;
     user-select: none; -webkit-user-drag: none;
   }
-  .vc-big:hover img { box-shadow: 0 0 0 3px rgba(0,0,0,0.5), 0 0 40px rgba(255,59,74,0.75), 0 10px 24px rgba(0,0,0,0.5); }
+  .vc-big:hover img { box-shadow: 0 0 0 3px rgba(0,0,0,0.5), 0 0 40px rgb(var(--accent-rgb) / 0.75), 0 10px 24px rgba(0,0,0,0.5); }
   .vc-big:active img { transform: scale(0.92) rotate(-2deg); }
   .vc-ups { display: grid; gap: 0.55rem; text-align: left; }
   .vc-up {
@@ -809,7 +823,7 @@
   .vc-up .c { grid-column: 2; grid-row: 1 / span 2; padding: 0.25rem 0.7rem; border-radius: 999px; background: rgba(228,185,98,0.18); border: 1px solid rgba(228,185,98,0.5); color: var(--gold); font-size: 0.95rem; font-weight: 800; white-space: nowrap; }
   .vc-reset { margin-top: 0.8rem; border: none; background: none; color: rgba(246,237,232,0.45); font-family: inherit; font-size: 0.8rem; font-weight: 600; text-decoration: underline; cursor: pointer; }
   .vc-reset:hover { color: var(--cream); }
-  .vc-float { position: absolute; pointer-events: none; z-index: 2; font-size: 1.3rem; font-weight: 800; color: #fff; text-shadow: 0 2px 0 #b3202b, 0 0 10px rgba(255,59,74,0.8); animation: deathfloat 0.9s ease-out forwards; }
+  .vc-float { position: absolute; pointer-events: none; z-index: 2; font-size: 1.3rem; font-weight: 800; color: #fff; text-shadow: 0 2px 0 var(--red), 0 0 10px rgb(var(--accent-rgb) / 0.8); animation: deathfloat 0.9s ease-out forwards; }
   @media (max-width: 800px) { .vc-launch { left: 24px; bottom: 24px; } }
   @media (prefers-reduced-motion: reduce) {
     .vc, .vc-card, .vc-big img, .vc-up, .vc-launch { transition: none; }
@@ -1023,6 +1037,53 @@
   }
   @media (prefers-reduced-motion: reduce) { .bg-checks { animation: none; } }
 
+
+  /* ---------- Countdown ---------- */
+  .countdown { margin-top: 1rem; }
+  .cd-label { margin-bottom: 0.5rem; font-size: 0.95rem; font-weight: 700; color: rgba(246,237,232,0.8); }
+  .cd-tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.6rem; }
+  .cd { padding: 0.55rem 0.2rem 0.45rem; text-align: center; background: rgba(0,0,0,0.25); border: 1px solid rgba(246,237,232,0.12); border-radius: 12px; }
+  .cd b { display: block; font-size: clamp(1.4rem, 2.4vw, 1.9rem); font-weight: 800; line-height: 1.1; font-variant-numeric: tabular-nums; }
+  .cd span { font-size: 0.85rem; font-weight: 500; color: rgba(246,237,232,0.7); }
+  .cd:last-child b { color: var(--logo-red); }
+
+  /* ---------- Theme picker ---------- */
+  .mp-pop { position: absolute; right: 0; bottom: calc(100% + 10px); }
+  .swatches { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.4rem; margin-top: 0.7rem; }
+  .sw { display: grid; justify-items: center; gap: 0.3rem; padding: 0.35rem 0; border: 2px solid transparent; border-radius: 12px; background: none; color: var(--cream); font-family: inherit; cursor: pointer; transition: border-color 0.2s, background 0.2s; }
+  .sw i { width: 38px; height: 38px; border-radius: 50%; border: 2px solid var(--cream); background: linear-gradient(90deg, var(--a) 0 50%, var(--b) 50% 100%); box-shadow: 0 2px 8px rgba(0,0,0,0.4); }
+  .sw span { font-size: 0.78rem; font-weight: 700; }
+  .sw:hover { background: rgba(255,255,255,0.06); }
+  .sw[aria-pressed="true"] { border-color: var(--gold); background: rgba(228,185,98,0.1); }
+  .sw:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) { .sw { transition: none; } }
+
+  /* ---------- Konami code secret ---------- */
+  .konami-banner {
+    position: fixed; top: 28px; left: 50%; z-index: 50;
+    translate: -50% 0;
+    padding: 0.7rem 1.6rem 0.8rem;
+    text-align: center;
+    border: 3px solid var(--gold); border-radius: 16px;
+    background: rgba(20,14,16,0.92);
+    box-shadow: 0 0 0 2px rgba(0,0,0,0.5), 0 0 34px rgba(228,185,98,0.45), 0 12px 30px rgba(0,0,0,0.5);
+    animation: konami-drop 3.8s cubic-bezier(.2,.8,.3,1) forwards;
+    pointer-events: none;
+  }
+  .konami-banner small { display: block; font-size: 0.85rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--cream); opacity: 0.8; }
+  .konami-banner b { display: block; font-size: 2rem; font-weight: 800; line-height: 1.1; color: var(--gold); text-shadow: 0 2px 0 rgba(0,0,0,0.5); }
+  @keyframes konami-drop {
+    0%   { opacity: 0; transform: translateY(-40px) scale(0.9); }
+    10%  { opacity: 1; transform: translateY(0) scale(1.06); }
+    16%  { transform: scale(1); }
+    85%  { opacity: 1; transform: none; }
+    100% { opacity: 0; transform: translateY(-20px); }
+  }
+  .konami-rain { position: fixed; inset: 0; z-index: 45; overflow: hidden; pointer-events: none; }
+  .konami-rain img { position: absolute; top: -90px; border-radius: 8px; border: 2px solid var(--cream); background: #000; image-rendering: pixelated; animation: konami-fall var(--t) linear var(--dl) forwards; }
+  @keyframes konami-fall { to { transform: translateY(calc(100vh + 120px)) rotate(var(--r)); } }
+  @media (prefers-reduced-motion: reduce) { .konami-banner { animation-duration: 3.8s; } }
+
   /* ---------- Load-in animation (one sequence: line, logo, titles, panels) ---------- */
   .reveal { animation: rise 0.8s cubic-bezier(.2,.7,.3,1) var(--d, 0s) both; }
 
@@ -1041,8 +1102,11 @@
     .bg {
       background:
         linear-gradient(180deg,
-          var(--red) 0%, var(--red) 20%, #85212a 36%, #4a2427 52%,
-          #302426 66%, var(--char) 78%, var(--char) 100%);
+          var(--red) 0%, var(--red) 20%,
+          color-mix(in srgb, var(--char) 34%, var(--red)) 36%,
+          color-mix(in srgb, var(--char) 78%, var(--red)) 52%,
+          color-mix(in srgb, var(--char) 97%, var(--red)) 66%,
+          var(--char) 78%, var(--char) 100%);
     }
     .blend {
       left: 0; right: 0; width: auto; top: 25%; bottom: 25%;
@@ -1111,6 +1175,15 @@
           </div>
         </div>
         <p>Estimated release: Mid October</p>
+        <div class="countdown" role="timer" aria-label="Countdown to October 15">
+          <div class="cd-label" id="cd-label">Counting down to October 15</div>
+          <div class="cd-tiles">
+            <div class="cd"><b id="cd-d">00</b><span>Days</span></div>
+            <div class="cd"><b id="cd-h">00</b><span>Hours</span></div>
+            <div class="cd"><b id="cd-m">00</b><span>Min</span></div>
+            <div class="cd"><b id="cd-s">00</b><span>Sec</span></div>
+          </div>
+        </div>
       </div>
 
       <div class="panel reveal" style="--d:1.3s">
@@ -1229,15 +1302,15 @@
       <div class="faq-list">
         <details class="qa">
           <summary>How often do you upload?</summary>
-          <div class="qa-a"><p>I try to put out about two videos a month. Hopefully they're good!</p></div>
+          <div class="qa-a"><p>I'll try to upload once a month, hopefully starting 2027.</p></div>
         </details>
         <details class="qa">
           <summary>What is Cilkocrate?</summary>
-          <div class="qa-a"><p>Cilkocrate is a series I made up. It has its own list of levels, top players and music, and the full list lives on the Cilkocrate website.</p></div>
+          <div class="qa-a"><p>Cilkocrate is a made-up series created by ME and all levels on the list are made by viewers! The list should be fully done by Mid 2027.</p></div>
         </details>
         <details class="qa">
           <summary>Where can I see the full level list?</summary>
-          <div class="qa-a"><p>Hit the gold Visit the Cilkocrate Website button, or use the link under the Top 20. Both open the full list.</p></div>
+          <div class="qa-a"><p>Click the button that says Visit the Cilkocrate Website button!</p></div>
         </details>
         <details class="qa">
           <summary>How do I turn the music off?</summary>
@@ -1245,7 +1318,7 @@
         </details>
         <details class="qa">
           <summary>Are the stats and progress bars live?</summary>
-          <div class="qa-a"><p>No, I update them by hand, so they might be a little behind. Check the date at the very bottom of the page.</p></div>
+          <div class="qa-a"><p>They are not live, ill try to update them once a week but no promises</p></div>
         </details>
       </div>
     </div>
@@ -1606,7 +1679,19 @@
       <span>by Epical</span>
       <label class="vol"><span>Volume</span><input id="music-vol" type="range" min="0" max="100" value="35" aria-label="Music volume"></label>
     </div>
+    <div class="mp-pop" id="th-pop">
+      <small>Theme</small>
+      <div class="swatches">
+        <button class="sw" type="button" data-theme="crimson" aria-pressed="true"><i style="--a:#b3202b;--b:#2c2426"></i><span>Crimson</span></button>
+        <button class="sw" type="button" data-theme="ocean" aria-pressed="false"><i style="--a:#1f66c2;--b:#222c36"></i><span>Ocean</span></button>
+        <button class="sw" type="button" data-theme="forest" aria-pressed="false"><i style="--a:#1a7f45;--b:#232b26"></i><span>Forest</span></button>
+        <button class="sw" type="button" data-theme="royal" aria-pressed="false"><i style="--a:#6b2fc0;--b:#2a2433"></i><span>Royal</span></button>
+      </div>
+    </div>
     <div class="mp-bar">
+      <button class="mp-more" id="th-btn" type="button" aria-label="Change color theme" aria-expanded="false" aria-controls="th-pop">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c2.76 0 5-2.24 5-5 0-4.42-4.03-8-9-8zm-5.5 9c-.83 0-1.5-.67-1.5-1.5S5.67 9 6.5 9 8 9.67 8 10.5 7.33 12 6.5 12zm3-4C8.67 8 8 7.33 8 6.5S8.67 5 9.5 5s1.5.67 1.5 1.5S10.33 8 9.5 8zm5 0c-.83 0-1.5-.67-1.5-1.5S13.67 5 14.5 5s1.5.67 1.5 1.5S15.33 8 14.5 8zm3 4c-.83 0-1.5-.67-1.5-1.5S16.67 9 17.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+      </button>
       <button class="mp-more" id="mp-more" type="button" aria-label="Music details and volume" aria-expanded="false" aria-controls="mp-pop">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7.4 14.6 12 10l4.6 4.6 1.4-1.4-6-6-6 6z"/></svg>
       </button>
@@ -1650,16 +1735,43 @@
       toggles.forEach(function (b) { b.addEventListener('click', function () { audio.paused ? play() : pause(); }); });
 
 
-      // little popover: song credit + volume
-      var more = document.getElementById('mp-more'), pop = document.getElementById('mp-pop'), mp = document.getElementById('mp');
-      function setPop(open) {
-        pop.classList.toggle('open', open);
-        more.setAttribute('aria-expanded', open ? 'true' : 'false');
-        document.body.classList.toggle('mp-open', open);
+      // little popovers: song credit + volume, and the theme picker
+      var mp = document.getElementById('mp');
+      var pops = [
+        { btn: document.getElementById('mp-more'), pop: document.getElementById('mp-pop') },
+        { btn: document.getElementById('th-btn'),  pop: document.getElementById('th-pop') }
+      ];
+      function setPop(p, open) {
+        p.pop.classList.toggle('open', open);
+        p.btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        document.body.classList.toggle('mp-open', pops.some(function (x) { return x.pop.classList.contains('open'); }));
       }
-      more.addEventListener('click', function () { setPop(!pop.classList.contains('open')); });
-      document.addEventListener('mousedown', function (e) { if (pop.classList.contains('open') && !mp.contains(e.target)) setPop(false); });
-      document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && pop.classList.contains('open')) { setPop(false); more.focus(); } });
+      pops.forEach(function (p) {
+        p.btn.addEventListener('click', function () {
+          var willOpen = !p.pop.classList.contains('open');
+          pops.forEach(function (x) { setPop(x, false); });
+          if (willOpen) setPop(p, true);
+        });
+      });
+      document.addEventListener('mousedown', function (e) { if (!mp.contains(e.target)) pops.forEach(function (x) { setPop(x, false); }); });
+      document.addEventListener('keydown', function (e) {
+        if (e.key !== 'Escape') return;
+        pops.forEach(function (x) { if (x.pop.classList.contains('open')) { setPop(x, false); x.btn.focus(); } });
+      });
+
+      // colour themes
+      var swatches = document.querySelectorAll('.sw');
+      var themeColors = { crimson: '#b3202b', ocean: '#1f66c2', forest: '#1a7f45', royal: '#6b2fc0' };
+      function setTheme(name, save) {
+        if (!themeColors[name]) name = 'crimson';
+        if (name === 'crimson') document.documentElement.removeAttribute('data-theme');
+        else document.documentElement.setAttribute('data-theme', name);
+        var meta = document.querySelector('meta[name="theme-color"]'); if (meta) meta.setAttribute('content', themeColors[name]);
+        swatches.forEach(function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-theme') === name ? 'true' : 'false'); });
+        if (save) put('theme', name);
+      }
+      swatches.forEach(function (b) { b.addEventListener('click', function () { setTheme(b.getAttribute('data-theme'), true); }); });
+      setTheme(get('theme') || 'crimson', false);
 
       // missing file: hide the music controls instead of showing dead buttons
       audio.addEventListener('error', function () { document.body.classList.add('no-music'); });
@@ -1673,6 +1785,69 @@
           play().then(function (ok) { if (ok) evs.forEach(function (n) { document.removeEventListener(n, start, true); }); });
         };
         evs.forEach(function (n) { document.addEventListener(n, start, true); });
+      }
+    })();
+  </script>
+
+  <script>
+    (function () {
+      /* ---- countdown to October 15 ---- */
+      var target = new Date(2026, 9, 15, 0, 0, 0).getTime();
+      var els = { d: document.getElementById('cd-d'), h: document.getElementById('cd-h'), m: document.getElementById('cd-m'), s: document.getElementById('cd-s') };
+      var label = document.getElementById('cd-label');
+      function pad(n) { return (n < 10 ? '0' : '') + n; }
+      function tick() {
+        var ms = target - Date.now();
+        if (ms <= 0) {
+          els.d.textContent = els.h.textContent = els.m.textContent = els.s.textContent = '00';
+          label.textContent = 'Release day is here';
+          return;
+        }
+        var t = Math.floor(ms / 1000);
+        els.d.textContent = pad(Math.floor(t / 86400));
+        els.h.textContent = pad(Math.floor(t % 86400 / 3600));
+        els.m.textContent = pad(Math.floor(t % 3600 / 60));
+        els.s.textContent = pad(t % 60);
+      }
+      tick(); setInterval(tick, 1000);
+
+      /* ---- secret: the Konami code ---- */
+      var code = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+      var pos = 0, busy = false;
+      var still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      document.addEventListener('keydown', function (e) {
+        var t = e.target && e.target.tagName;
+        if (t === 'INPUT' || t === 'TEXTAREA') { pos = 0; return; }
+        var k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+        pos = (k === code[pos]) ? pos + 1 : (k === code[0] ? 1 : 0);
+        if (pos === code.length) { pos = 0; konami(); }
+      });
+      function konami() {
+        if (busy) return; busy = true;
+        var banner = document.createElement('div');
+        banner.className = 'konami-banner';
+        banner.innerHTML = '<small>Konami code</small><b>+30 lives</b>';
+        document.body.appendChild(banner);
+        var rain = null;
+        if (!still) {
+          rain = document.createElement('div');
+          rain.className = 'konami-rain';
+          var srcs = ['Logo.png', 'cilkocrate-icon.png'];
+          for (var i = 0; i < 34; i++) {
+            var img = document.createElement('img');
+            img.src = srcs[i % 2];
+            img.alt = '';
+            var size = 36 + Math.random() * 40;
+            img.style.width = img.style.height = size + 'px';
+            img.style.left = (Math.random() * 96) + '%';
+            img.style.setProperty('--t', (2.4 + Math.random() * 2.2) + 's');
+            img.style.setProperty('--dl', (Math.random() * 1.6) + 's');
+            img.style.setProperty('--r', (Math.random() * 720 - 360) + 'deg');
+            rain.appendChild(img);
+          }
+          document.body.appendChild(rain);
+        }
+        setTimeout(function () { banner.remove(); if (rain) rain.remove(); busy = false; }, 6200);
       }
     })();
   </script>
