@@ -56,8 +56,6 @@
     z-index: -4;
     filter: blur(7px);
     background:
-      conic-gradient(rgba(0,0,0,0.22) 25%, transparent 0 50%, rgba(0,0,0,0.22) 0 75%, transparent 0)
-        0 0 / var(--check-size) var(--check-size),
       linear-gradient(90deg,
         var(--red) 0%, var(--red) 18%, #a5202a 26%, #85212a 36%, #612228 44%,
         #4a2427 52%, #3a2426 60%, #302426 68%, var(--char) 78%, var(--char) 100%);
@@ -462,8 +460,8 @@
     pointer-events: none;
     transition: opacity 0.8s ease;
   }
-  .bg-alt.left  { background: conic-gradient(rgba(0,0,0,0.22) 25%, transparent 0 50%, rgba(0,0,0,0.22) 0 75%, transparent 0) 0 0 / var(--check-size) var(--check-size), linear-gradient(135deg, #b3202b, #8c1a24); }
-  .bg-alt.right { background: conic-gradient(rgba(0,0,0,0.22) 25%, transparent 0 50%, rgba(0,0,0,0.22) 0 75%, transparent 0) 0 0 / var(--check-size) var(--check-size), linear-gradient(135deg, #342a2b, #211b1d); }
+  .bg-alt.left  { background: linear-gradient(135deg, #b3202b, #8c1a24); }
+  .bg-alt.right { background: linear-gradient(135deg, #342a2b, #211b1d); }
   body.full-left  .bg-alt.left  { opacity: 1; }
   body.full-right .bg-alt.right { opacity: 1; }
 
@@ -1005,6 +1003,26 @@
   .qa-a p { font-size: 1.05rem; }
   @media (prefers-reduced-motion: reduce) { .qa, .qa summary::after { transition: none; } .qa[open] .qa-a { animation: none; } }
 
+
+  /* ---------- Moving checkerboard (only the squares move, the colours stay put) ---------- */
+  .bg-checks {
+    position: fixed;
+    top: -40px; left: -40px; right: -40px;
+    bottom: calc(-40px - var(--check-size));      /* extra row so nothing is exposed while it slides */
+    z-index: -4;
+    pointer-events: none;
+    filter: blur(7px);
+    will-change: transform;
+    background: conic-gradient(rgba(0,0,0,0.22) 25%, transparent 0 50%, rgba(0,0,0,0.22) 0 75%, transparent 0) 0 0 / var(--check-size) var(--check-size);
+    animation: checks-up 7s linear infinite;
+  }
+  @keyframes checks-up   { from { transform: translateY(0); } to { transform: translateY(calc(var(--check-size) * -1)); } }
+  @keyframes checks-side { from { transform: translateX(0); } to { transform: translateX(calc(var(--check-size) * -1)); } }
+  @media (max-width: 800px) {
+    .bg-checks { right: calc(-40px - var(--check-size)); bottom: -40px; animation-name: checks-side; }
+  }
+  @media (prefers-reduced-motion: reduce) { .bg-checks { animation: none; } }
+
   /* ---------- Load-in animation (one sequence: line, logo, titles, panels) ---------- */
   .reveal { animation: rise 0.8s cubic-bezier(.2,.7,.3,1) var(--d, 0s) both; }
 
@@ -1019,10 +1037,9 @@
 
   /* ---------- Mobile ---------- */
   @media (max-width: 800px) {
+    :root { --check-size: 60px; }
     .bg {
       background:
-        conic-gradient(rgba(0,0,0,0.22) 25%, transparent 0 50%, rgba(0,0,0,0.22) 0 75%, transparent 0)
-          0 0 / 60px 60px,
         linear-gradient(180deg,
           var(--red) 0%, var(--red) 20%, #85212a 36%, #4a2427 52%,
           #302426 66%, var(--char) 78%, var(--char) 100%);
@@ -1045,6 +1062,7 @@
   <div class="bg"></div>
   <div class="bg-alt left"></div>
   <div class="bg-alt right"></div>
+  <div class="bg-checks"></div>
   <div class="blend"></div>
   <div class="vignette"></div>
   <div class="frame"></div>
